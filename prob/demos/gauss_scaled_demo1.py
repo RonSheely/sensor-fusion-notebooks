@@ -10,7 +10,7 @@ def gauss_scaled_demo1_plot(muX=0, sigmaX=1, a=1):
     x = np.linspace(-10, 10, N)
 
     muY = a * muX
-    sigmaY = np.sqrt(abs(a)) * sigmaX
+    sigmaY = abs(a) * sigmaX
     
     fX = gauss(x, muX, sigmaX)
     fY = gauss(x, muY, sigmaY)
