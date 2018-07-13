@@ -17,7 +17,7 @@ def pdf(x, muX, sigmaX, distribution):
         return 1.0 * ((x >= xmin) & (x <= xmax)) / (xmax - xmin)
     raise ValueError('Unknown distribution %s' % distribution)
 
-def dead_reckoning_demo1_plot(steps=5, v=2, sigmaW=0.2):
+def dead_reckoning_demo1_plot(steps=1, v=2, sigmaW=0.2):
 
     dt = 1
     
@@ -26,8 +26,10 @@ def dead_reckoning_demo1_plot(steps=5, v=2, sigmaW=0.2):
     dx = x[1] - x[0]    
     offset = int(-x[0] / dx)
 
+    Xrange = 1
+    sigmaX = Xrange / np.sqrt(12)
+    
     muX = 0
-    sigmaX = 1
     muW = v * dt
     
     fX = pdf(x, muX, sigmaX, 'uniform')
@@ -38,7 +40,7 @@ def dead_reckoning_demo1_plot(steps=5, v=2, sigmaW=0.2):
     ax = fig.add_subplot(111)
     ax.grid(True)
 
-    mx = (x < 20) & (x > -2)
+    mx = (x < 12) & (x > -2)
     
     for m in range(steps):
 
@@ -50,11 +52,6 @@ def dead_reckoning_demo1_plot(steps=5, v=2, sigmaW=0.2):
     ax.legend()
 
 def dead_reckoning_demo1():
-    interact(dead_reckoning_demo1_plot, steps=(1, 20), v=(0, 5, 0.25),
-             sigmaW=(0.01, 1, 0.01),
+    interact(dead_reckoning_demo1_plot, steps=(1, 5), v=(0, 5, 0.25),
+             sigmaW=(0.1, 1, 0.01),
              continuous_update=False)
-    
-    
-
-    
-
