@@ -1,6 +1,6 @@
 # M. P. Hayes UCECE
 import numpy as np
-from ipywidgets import interact, interactive, fixed, interact
+from ipywidgets import interact, interactive, fixed
 from .lib.signal_plot import signal_plot
 from .lib.utils import gauss
 
@@ -17,7 +17,7 @@ def pdf(x, muX, sigmaX, distribution):
         return 1.0 * ((x >= xmin) & (x <= xmax)) / (xmax - xmin)
     raise ValueError('Unknown distribution %s' % distribution)
 
-def rv_sum_demo1_plot(muX=0, sigmaX=1, N=1, distribution=distributions[1]):
+def rv_sum_demo1_plot(muX=0, sigmaX=1, N=5, distribution=distributions[1]):
 
     Nx = 801
     x = np.linspace(-50, 50, Nx)
@@ -29,15 +29,10 @@ def rv_sum_demo1_plot(muX=0, sigmaX=1, N=1, distribution=distributions[1]):
         fX = pdf(x, muX, sigmaX, distribution)
         fZ = np.convolve(fZ, fX)[offset:offset + len(x)] * dx
 
-    mx = (x < 10) & (x > -10)
+    mx = (x < 20) & (x > -20)
         
     signal_plot(x[mx], fZ[mx])
 
 def rv_sum_demo1():
-    interact(rv_sum_demo1_plot, muX=(-2, 2), sigmaX=(-5, 5),
-             distribution=distributions, N=(1, 100), continuous_update=False)
-    
-    
-
-    
-
+    interact(rv_sum_demo1_plot, muX=(-2, 2), sigmaX=(0.01, 5, 0.01),
+             distribution=distributions, N=(1, 100))

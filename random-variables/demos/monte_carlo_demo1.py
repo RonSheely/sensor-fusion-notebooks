@@ -1,6 +1,6 @@
 # M. P. Hayes UCECE
 import numpy as np
-from ipywidgets import interact, interactive, fixed, interact
+from ipywidgets import interact, interactive, fixed
 from .lib.signal_plot import signal_plot
 import mcerp
 mcerp.npts = 1000000
