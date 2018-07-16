@@ -1,5 +1,5 @@
 # M. P. Hayes UCECE
-from matplotlib.pyplot import subplots, setp, show
+from matplotlib.pyplot import subplots, setp
 import numpy as np
 
 spectrum_modes = ['real-imag', 'magnitude', 'magnitude dB', 'phase', 'magnitude-phase', 'magnitude dB-phase']
@@ -158,7 +158,7 @@ def signal_plot(t, x, **kwargs):
 
     axes, kwargs = create_axes(1, **kwargs)
     signal_plot_func(t, x, axes=axes, **kwargs)
-    show()
+    return axes.figure
     
 def signal_plot2(t1, x1, t2, x2, **kwargs):    
 
@@ -168,8 +168,7 @@ def signal_plot2(t1, x1, t2, x2, **kwargs):
     if 'color' not in kwargs:
         kwargs['color'] = 'orange'
     signal_plot_func(t2, x2, axes=axes[1], **kwargs)
-    show()
-    return axes
+    return axes[0].figure
 
 def signal_plot_with_interpolated(t1, x1, t2, x2, **kwargs):
 
@@ -182,8 +181,7 @@ def signal_plot_with_interpolated(t1, x1, t2, x2, **kwargs):
         t2 = np.arange(len(t2)) / len(t2) * len(t1)
     kwargs.pop('ylim')
     p1.axes.plot(t2, x2, color='orange', **kwargs)
-    show()
-    return axes
+    return axes.figure
     
 def signal_plot3(t1, x1, t2, x2, t3, x3, **kwargs):    
 
@@ -192,14 +190,12 @@ def signal_plot3(t1, x1, t2, x2, t3, x3, **kwargs):
     signal_plot_func(t1, x1, axes=axes[0], **kwargs)
     signal_plot_func(t2, x2, axes=axes[1], **kwargs)
     signal_plot_func(t3, x3, axes=axes[2], **kwargs)
-    show()
-    return axes    
+    return axes[0].figure    
 
 def hist_plot(t, x, **kwargs):
 
     axes = hist_plot_func(t, x, **kwargs)
-    show()
-    return axes
+    return axes.figure
         
 def signal_plot_with_hist(t, x, **kwargs):
 
@@ -210,14 +206,12 @@ def signal_plot_with_hist(t, x, **kwargs):
 
     signal_plot_func(t, x, axes=axes[0], lollipop=lollipop, **kwargs)
     hist_plot_func(t, x, axes=axes[1], range=range, **kwargs)
-    show()
-    return axes
+    return axes[0].figure
 
 def dtft_plot(f, X, **kwargs):
 
     axes = dtft_plot_func(f, X, **kwargs)
-    show()
-    return axes
+    return axes.figure
 
 def signal_plot_with_dtft(t, x, f, X, **kwargs):
 
@@ -227,13 +221,11 @@ def signal_plot_with_dtft(t, x, f, X, **kwargs):
     
     signal_plot_func(t, x, axes=axes[0], lollipop=lollipop, **kwargs)
     dtft_plot_func(f, X, axes=axes[1], **kwargs)
-    show()
-    return axes
+    return axes[0].figure
 
 def dft_plot(f, X, **kwargs):
     axes = dft_plot_func(f, X, **kwargs)
-    show()
-    return axes
+    return axes.figure
 
 def signal_plot_with_dft(t, x, f, X, **kwargs):
 
@@ -244,5 +236,4 @@ def signal_plot_with_dft(t, x, f, X, **kwargs):
     
     signal_plot_func(t, x, axes=axes[0], lollipop=lollipop, **kwargs)
     dft_plot_func(f, X, axes=axes[1], lollipop=lollipop, mode=mode, **kwargs)
-    show()
-    return axes
+    return axes[0].figure
