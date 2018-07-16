@@ -143,6 +143,17 @@ def dtft_plot_func(f, X, mode='real-imag', **kwargs):
     Plotter(axes, mode, lollipop=False).plot(f, X)
     return axes
 
+def hist_plot_func(t, x, **kwargs):
+
+    bins = kwargs.pop('bins', 100)
+    range = kwargs.pop('range', None)
+    density = kwargs.pop('density', None)    
+    
+    axes, kwargs = create_axes(1, **kwargs)    
+            
+    axes.hist(x, density=density, bins=bins, range=range)
+    return axes
+
 def signal_plot(t, x, **kwargs):
 
     axes, kwargs = create_axes(1, **kwargs)
@@ -186,13 +197,8 @@ def signal_plot3(t1, x1, t2, x2, t3, x3, **kwargs):
 
 def hist_plot(t, x, **kwargs):
 
-    bins = kwargs.pop('bins', 100)
-    range = kwargs.pop('range', None)
-    density = kwargs.pop('density', None)    
-    
-    axes, kwargs = create_axes(1, **kwargs)    
-            
-    axes.hist(x, density=density, bins=bins, range=range)
+    axes = hist_plot_func(t, x, **kwargs)
+    show()
     return axes
         
 def signal_plot_with_hist(t, x, **kwargs):
@@ -220,7 +226,7 @@ def signal_plot_with_dtft(t, x, f, X, **kwargs):
     lollipop = kwargs.pop('lollipop', False)
     
     signal_plot_func(t, x, axes=axes[0], lollipop=lollipop, **kwargs)
-    dtft_plot(f, X, axes=axes[1], **kwargs)
+    dtft_plot_func(f, X, axes=axes[1], **kwargs)
     show()
     return axes
 
@@ -237,6 +243,6 @@ def signal_plot_with_dft(t, x, f, X, **kwargs):
     mode = kwargs.pop('mode', 'real-imag')    
     
     signal_plot_func(t, x, axes=axes[0], lollipop=lollipop, **kwargs)
-    dft_plot(f, X, axes=axes[1], lollipop=lollipop, mode=mode, **kwargs)
+    dft_plot_func(f, X, axes=axes[1], lollipop=lollipop, mode=mode, **kwargs)
     show()
     return axes
