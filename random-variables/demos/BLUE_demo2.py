@@ -8,8 +8,8 @@ def BLUE_demo2_plot(w1=0.5):
 
     w2 = 1.0 - w1
     
-    muX1 = 0
-    muX2 = 0
+    muX1 = 2
+    muX2 = 2
     sigmaX1 = 1
     sigmaX2 = 2
 

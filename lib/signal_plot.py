@@ -106,7 +106,7 @@ class Plotter(object):
            self.axes.set_ylim(ylim)
 
             
-def create_axes(num_axes, **kwargs):
+def create_axes(num_axes=1, **kwargs):
 
     axes = kwargs.pop('axes', None)
     figsize = kwargs.pop('figsize', (8, 4))    
@@ -189,6 +189,8 @@ def signal_plot3(t1, x1, t2, x2, t3, x3, **kwargs):
 
     signal_plot_func(t1, x1, axes=axes[0], **kwargs)
     signal_plot_func(t2, x2, axes=axes[1], **kwargs)
+    if 'color' not in kwargs:
+        kwargs['color'] = 'orange'    
     signal_plot_func(t3, x3, axes=axes[2], **kwargs)
     return axes[0].figure    
 

@@ -27,3 +27,25 @@ def gauss(t, mu=0, sigma=1):
 
     return np.exp(-0.5 * ((t - mu) / sigma)**2) / (np.sqrt(2 * np.pi) * sigma)
 
+def trap(t, alpha):
+    """Trapezoid function; alpha is the normalised rise/fall time.
+    trap(t, 0) = rect(t); trap(t, 1) = tri(t).  The top of the trapezoid
+    has width 1 - alpha and the bottom has width 1 + alpha."""
+
+    if alpha == 0:
+        return rect(t)
+    if alpha == 1:
+        return tri(t)
+
+    w = rect(t / (1 + alpha)) - rect(t / (1 - alpha))
+
+    return rect(t / (1 - alpha)) + w * (1 - (abs(t) - 0.5 * (1 - alpha)) / alpha)
+
+
+def trap2(t, top, base):
+    """Trapezoid function; top is the width of the top, base is the width
+    of the base"""
+
+    T = 0.5 * (base + top)
+    alpha = (base - top) / (base + top)
+    return trap(t / T, alpha)
