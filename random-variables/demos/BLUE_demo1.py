@@ -6,22 +6,22 @@ from .lib.utils import gauss
 
 def BLUE_demo1_plot(w1=0.5, w2=0.5):
 
-    muX1 = 2
-    muX2 = 2
-    sigmaX1 = 1
-    sigmaX2 = 2
+    muZ1 = 2
+    muZ2 = 2
+    sigmaZ1 = 1
+    sigmaZ2 = 2
 
-    muX = w1 * muX1 + w2 * muX2
-    sigmaX = np.sqrt(w1**2 * sigmaX1**2 + w2**2 * sigmaX2**2)    
+    muZ = w1 * muZ1 + w2 * muZ2
+    sigmaZ = np.sqrt(w1**2 * sigmaZ1**2 + w2**2 * sigmaZ2**2)    
     
     N = 401
-    x = np.linspace(-8, 8, N)
+    z = np.linspace(-8, 8, N)
 
-    fX1 = gauss(x, muX1, sigmaX1)
-    fX2 = gauss(x, muX2, sigmaX2)    
-    fX = gauss(x, muX, sigmaX)
+    fZ1 = gauss(z, muZ1, sigmaZ1)
+    fZ2 = gauss(z, muZ2, sigmaZ2)    
+    fZ = gauss(z, muZ, sigmaZ)
     
-    signal_plot3(x, fX1, x, fX2, x, fX)
+    signal_plot3(z, fZ1, z, fZ2, z, fZ, ylim=(0, 0.5))
 
 def BLUE_demo1():
     interact(BLUE_demo1_plot, w1=(0, 1.0, 0.1), w2=(0, 1.0, 0.1))
