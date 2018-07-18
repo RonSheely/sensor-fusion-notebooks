@@ -29,8 +29,8 @@ def sonar1_model_demo1_plot(N=20, order=2):
         r2 = r[n] + 0.5 * dr    
         m = (distance > r1) & (distance < r2)
 
-        means[n] = error[m].mean()
-        stds[n] = error[m].std()
+    means[n] = error[m].mean()
+    stds[n] = error[m].std()
 
     mean_model = np.polyval(np.polyfit(r, means, order), r)
     std_model = np.polyval(np.polyfit(r, stds, order), r)        
@@ -44,7 +44,7 @@ def sonar1_model_demo1_plot(N=20, order=2):
     axes[1].plot(r, std_model)    
     axes[1].set_xlabel('Distance (m)')
     axes[1].set_ylabel('Error std dev (m)')
-
+    show()
 
 def sonar1_model_demo1():
     interact(sonar1_model_demo1_plot, N=(1, 50), order=(1, 10),
