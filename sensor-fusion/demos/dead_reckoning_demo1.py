@@ -7,12 +7,12 @@ from .lib.utils import gauss
 
 distributions = ['gaussian', 'uniform']
 
-beliefs = ['uniform sigmaX = 0.1',
-           'uniform sigmaX = 0.2',
-           'uniform sigmaX = 0.5',           
-           'gaussian sigmaX = 0.1',
-           'gaussian sigmaX = 0.2',
-           'gaussian sigmaX = 0.5']
+beliefs = ['uniform sigma = 0.1',
+           'uniform sigma = 0.2',
+           'uniform sigma = 0.5',           
+           'gaussian sigma = 0.1',
+           'gaussian sigma = 0.2',
+           'gaussian sigma = 0.5']
 
 def pdf(x, muX, sigmaX, distribution):
 
