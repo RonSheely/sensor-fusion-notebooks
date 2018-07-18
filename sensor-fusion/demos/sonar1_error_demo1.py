@@ -25,5 +25,5 @@ def sonar1_error_demo1_plot(error_max=0.2):
     axes.set_ylim(-error_max, error_max)
 
 def sonar1_error_demo1():
-    interact(sonar1_error_demo1_plot, error_max=(0.05, 0.5, 0.05),
+    interact(sonar1_error_demo1_plot, error_max=(0.05, 3, 0.05),
              continuous_update=False)
