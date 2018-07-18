@@ -29,8 +29,8 @@ def sonar1_stats_demo1_plot(N=20):
         r2 = r[n] + 0.5 * dr    
         m = (distance > r1) & (distance < r2)
 
-    means[n] = error[m].mean()
-    stds[n] = error[m].std()
+        means[n] = error[m].mean()
+        stds[n] = error[m].std()
 
     axes, kwargs = create_axes(2)
     axes[0].plot(r, means, '.')
