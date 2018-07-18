@@ -4,7 +4,7 @@ from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import subplots, show
 from .lib.signal_plot import create_axes
 
-def sonar1_model_demo1_plot(N=20, order=2):
+def sonar1_model_demo1_plot(N=20, order=3, ignore_outliers=True):
 
     # Load data
     filename = 'data/sonar1-calibration.csv'
@@ -26,8 +26,11 @@ def sonar1_model_demo1_plot(N=20, order=2):
     
     for n in range(N):
         r1 = r[n] - 0.5 * dr
-        r2 = r[n] + 0.5 * dr    
-        m = (distance > r1) & (distance < r2)
+        r2 = r[n] + 0.5 * dr
+        if ignore_outliers:
+            m = (distance > r1) & (distance < r2) & (abs(error) < 1)
+        else:
+            m = (distance > r1) & (distance < r2)
 
         means[n] = error[m].mean()
         stds[n] = error[m].std()
@@ -47,5 +50,5 @@ def sonar1_model_demo1_plot(N=20, order=2):
     show()
 
 def sonar1_model_demo1():
-    interact(sonar1_model_demo1_plot, N=(1, 50), order=(1, 10),
+    interact(sonar1_model_demo1_plot, N=(1, 50), order=(1, 5),
              continuous_update=False)
