@@ -7,6 +7,13 @@ from .lib.utils import gauss
 
 distributions = ['gaussian', 'uniform']
 
+beliefs = ['uniform sigmaX = 0.1',
+           'uniform sigmaX = 0.2',
+           'uniform sigmaX = 0.5',           
+           'gaussian sigmaX = 0.1',
+           'gaussian sigmaX = 0.2',
+           'gaussian sigmaX = 0.5']
+
 def pdf(x, muX, sigmaX, distribution):
 
     if distribution == 'gaussian':
@@ -17,7 +24,15 @@ def pdf(x, muX, sigmaX, distribution):
         return 1.0 * ((x >= xmin) & (x <= xmax)) / (xmax - xmin)
     raise ValueError('Unknown distribution %s' % distribution)
 
-def dead_reckoning_demo1_plot(steps=1, v=2, sigmaW=0.2):
+def pdf_byname(x, muX, name):
+
+    parts = name.split(' ')
+    distribution = parts[0]
+    sigmaX = float(parts[3])
+
+    return pdf(x, muX, sigmaX, distribution)
+
+def dead_reckoning_demo1_plot(steps=0, v=2, X0=beliefs[0], Wn=beliefs[3]):
 
     dt = 1
     
@@ -32,9 +47,9 @@ def dead_reckoning_demo1_plot(steps=1, v=2, sigmaW=0.2):
     muX = 0
     muW = v * dt
     
-    fX = pdf(x, muX, sigmaX, 'uniform')
+    fX = pdf_byname(x, muX, X0)
 
-    fW = pdf(x, muW, sigmaW, 'gaussian')    
+    fW = pdf_byname(x, muW, Wn)
 
     fig = figure(figsize=(10, 5))
     ax = fig.add_subplot(111)
@@ -42,7 +57,7 @@ def dead_reckoning_demo1_plot(steps=1, v=2, sigmaW=0.2):
 
     mx = (x < 12) & (x > -2)
     
-    for m in range(steps):
+    for m in range(steps + 1):
 
         if m > 0:
             fX = np.convolve(fX, fW)[offset:offset + len(x)] * dx
@@ -52,6 +67,5 @@ def dead_reckoning_demo1_plot(steps=1, v=2, sigmaW=0.2):
     ax.legend()
 
 def dead_reckoning_demo1():
-    interact(dead_reckoning_demo1_plot, steps=(1, 5), v=(0, 5, 0.25),
-             sigmaW=(0.1, 1, 0.01),
-             continuous_update=False)
+    interact(dead_reckoning_demo1_plot, steps=(0, 5), v=(0, 5, 0.25),
+             X0=beliefs, Wn=beliefs, continuous_update=False)
