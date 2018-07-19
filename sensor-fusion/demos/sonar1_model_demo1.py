@@ -4,7 +4,7 @@ from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import subplots, show
 from .lib.signal_plot import create_axes
 
-def sonar1_model_demo1_plot(N=20, order=3, ignore_outliers=True):
+def sonar1_model_demo1_plot(N=20, order=2, ignore_outliers=True):
 
     # Load data
     filename = 'data/sonar1-calibration.csv'
