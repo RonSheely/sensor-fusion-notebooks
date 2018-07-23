@@ -56,7 +56,7 @@ def kf_demo1_plot(step=1, v=2.0, sigmaX0=0.1, sigmaV=0.4, sigmaW=0.4,
 
     ax.plot(x[mx], fXinitial[mx], ':', label='$\hat{X}_{%d}^{+}$ initial' % (m - 1))        
     ax.plot(x[mx], fXprior[mx], '--', label='$\hat{X}_{%d}^{-}$ prior' % m)
-    ax.plot(x[mx], fXinfer[mx], '-.', label='$\hat{X}_{%d}^{-}$ measure' % m)
+    ax.plot(x[mx], fXinfer[mx], '-.', label='$\hat{X}_{%d}$ likelihood' % m)
     ax.plot(x[mx], fXpost[mx], label='$\hat{X}_{%d}^{+}$ posterior' % m)
 
     ax.legend()
