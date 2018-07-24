@@ -5,3 +5,6 @@ from .sonar1_error_demo1 import *
 from .sonar1_hist_demo1 import *
 from .sonar1_model_demo1 import *
 from .kf_demo1 import *
+from .ekf_demo1 import *
+from .linear_transformation_demo1 import *
+from .nonlinear_transformation_demo1 import *

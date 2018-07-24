@@ -1,0 +1,34 @@
+# M. P. Hayes UCECE
+import numpy as np
+from ipywidgets import interact, interactive, fixed
+from matplotlib.pyplot import figure
+from .lib.signal_plot import signal_plot
+
+# This shows a non-linear motion model for the x-position of
+# a pendulum bob for a pendulum of length l.
+
+def ekf_demo1_plot(l=1.0):
+
+    dt = 0.01
+
+    N = 200
+    n = np.arange(N)
+    
+    g = 9.81
+    theta_0 = np.radians(10)
+
+    # Period of pendulum if theta_0 small
+    #T0 = 2 * np.pi * np.sqrt(l / g)
+    #print(T0)
+    
+    t = n * dt
+    theta = theta_0 * np.cos(np.sqrt(g / l) * t)
+    # x position of pendulum
+    x = l * np.sin(theta)
+
+    signal_plot(t, x)
+
+
+def ekf_demo1():
+    interact(ekf_demo1_plot, l=(0.1, 2.0, 0.1),
+             continuous_update=False)
