@@ -5,7 +5,7 @@ from matplotlib.pyplot import figure
 from .lib.utils import gauss
 
 distributions = ['gaussian', 'uniform']
-transforms = ['X', 'X**3', 'cos(X)']
+transforms = ['X', 'X**2', 'X**3', 'cos(X)']
 
 
 def pdf(x, muX, sigmaX, distribution):
@@ -24,29 +24,23 @@ def nonlinear_transformation_demo1_plot(muX=0, sigmaX=1,
 
     Nx = 801
     x = np.linspace(-10, 10, Nx)
-    dx = x[1] - x[0]    
 
+    # Number of samples
     N = 1000000
+    # Number of bins in histogram
     M = 100
+    
     if distribution == 'gaussian':
         X = np.random.randn(N) * sigmaX + muX
     elif distribution == 'uniform':        
-        Xrange = sigmaX * np.sqrt(12)
-        X = (np.random.rand(N) - 0.5) * Xrange + muX        
+        rangeX = sigmaX * np.sqrt(12)
+        X = (np.random.rand(N) - 0.5) * rangeX + muX        
     else:
         raise ValueError('Unknown distribution ' + distribution)
-    
-    if transform == 'X**3':
-        Z = X**3
-    elif transform == 'X':
-        Z = X
-    elif transform == 'cos(X)':
-        Z = np.cos(X)        
-    else:
-        raise ValueError('Unknown transform ' + transform)
 
-    #fX, xe = np.histogram(X, bins=M, density=True, range=(-10, 10))
-    fZ, ze = np.histogram(Z, bins=M, density=True, range=(-10, 10))
+    Z = eval(transform)
+
+    fZ, ze = np.histogram(Z, bins=M, density=True, range=(-5, 5))
     # Calculate M centres from M + 1 edges
     zc = ze[0:M] + 0.5 * (ze[1] - ze[0])
 
