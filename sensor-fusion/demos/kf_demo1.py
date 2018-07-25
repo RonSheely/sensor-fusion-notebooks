@@ -2,7 +2,6 @@
 import numpy as np
 from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import figure
-from .lib.signal_plot import signal_plot2
 from .lib.utils import gauss
 
 def kf_demo1_plot(step=1, v=2.0, sigmaX0=0.1, sigmaV=0.4, sigmaW=0.4,
