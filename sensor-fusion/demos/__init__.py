@@ -9,3 +9,4 @@ from .ekf_demo1 import *
 from .linear_transformation_demo1 import *
 from .nonlinear_transformation_demo1 import *
 from .bayes_demo1 import *
+from .bayes_demo2 import *
