@@ -17,34 +17,25 @@ def pdf(x, muX, sigmaX, distribution):
         return 1.0 * ((x >= xmin) & (x <= xmax)) / (xmax - xmin)
     raise ValueError('Unknown distribution %s' % distribution)
 
-def bayes_demo1_plot(muX=0, sigmaX=1, sigmaV=0.5, z=2,
-                     prior_dist=distributions[0],
-                     noise_dist=distributions[0]):
+def likelihood_demo2_plot(z=2, a=0.3,
+                          noise_dist=distributions[0]):
 
     Nx = 801
     x = np.linspace(-5, 5, Nx)
 
-    fX = pdf(x, muX, sigmaX, prior_dist)
-    fV = pdf(x, 0, sigmaV, noise_dist)
+    sigmaV = a * abs(x) + 0.1
+    
     fZgX = pdf(x, z, sigmaV, noise_dist)
-
-    fXgZ = fZgX * fX
-    eta = np.trapz(fXgZ, x)
-    fXgZ /= eta
 
     fig = figure(figsize=(10, 5))
     ax = fig.add_subplot(111)
     ax.grid(True)
 
     ax.plot(x, fZgX, '--', label='$f_{Z|X}(%d|x)$ likelihood' % z)
-    ax.plot(x, fX, '-.', label='$f_X(x)$ prior')
-    ax.plot(x, fXgZ, '-', label='$f_{X|Z}(x|%d)$ posterior' %z)
 
     ax.legend()
     
 
-def bayes_demo1():
-    interact(bayes_demo1_plot, muX=(-2, 2),
-             sigmaX=(0.01, 5, 0.01), sigmaV=(0.01, 5, 0.01),
-             z=(-4, 4, 1),
-             prior_dist=distributions, noise_dist=distributions)
+def likelihood_demo2():
+    interact(likelihood_demo2_plot, a=(0.1, 1, 0.1), z=(-4, 4, 1),
+             noise_dist=distributions)
