@@ -38,6 +38,7 @@ def nonlinear_transformation_demo1_plot(muX=0, sigmaX=1,
     else:
         raise ValueError('Unknown distribution ' + distribution)
 
+    from numpy import *
     Z = eval(transform)
 
     fZ, ze = np.histogram(Z, bins=M, density=True, range=(-5, 5))
