@@ -18,7 +18,6 @@ def pdf(x, muX, sigmaX, distribution):
     raise ValueError('Unknown distribution %s' % distribution)
 
 def likelihood_demo1_plot(sigmaV=0.5, z=2,
-                          prior_dist=distributions[0],
                           noise_dist=distributions[0]):
 
     Nx = 801
@@ -37,4 +36,4 @@ def likelihood_demo1_plot(sigmaV=0.5, z=2,
 
 def likelihood_demo1():
     interact(likelihood_demo1_plot, sigmaV=(0.01, 5, 0.01), z=(-4, 4, 1),
-             prior_dist=distributions, noise_dist=distributions)
+             noise_dist=distributions)
