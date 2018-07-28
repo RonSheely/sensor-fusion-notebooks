@@ -210,6 +210,17 @@ def signal_plot_with_hist(t, x, **kwargs):
     hist_plot_func(t, x, axes=axes[1], range=range, **kwargs)
     return axes[0].figure
 
+def signal_plot_and_hist(t, x, t2, x2, **kwargs):
+
+    range = kwargs.pop('range', None)
+    lollipop = kwargs.pop('lollipop', False)    
+    
+    axes, kwargs = create_axes(2, **kwargs)
+
+    signal_plot_func(t, x, axes=axes[0], lollipop=lollipop, **kwargs)
+    hist_plot_func(t2, x2, axes=axes[1], range=range, **kwargs)
+    return axes[0].figure
+
 def dtft_plot(f, X, **kwargs):
 
     axes = dtft_plot_func(f, X, **kwargs)

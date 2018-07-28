@@ -65,5 +65,5 @@ def kf_demo1():
              sigmaX0=(0.1, 1, 0.1),
              sigmaV=(0.1, 1, 0.1),
              sigmaW=(0.1, 1, 0.1),
-             seed=(1,100,1),
+             seed=(1, 100, 1),
              continuous_update=False)
