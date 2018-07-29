@@ -7,7 +7,7 @@ from .lib.signal_plot import hist_plot
 from .lib.utils import rect, sinc, gauss
 from .lib.kde import KDE
 
-distributions = ['gaussian', 'uniform']
+distributions = ['uniform', 'gaussian']
 
 
 def pdf(x, muX, sigmaX, distribution):
@@ -31,7 +31,8 @@ def sampling_demo2_plot(dist=distributions[0], muX=0, sigmaX=1, N=1000, seed=1):
     fX = pdf(x, muX, sigmaX, dist)    
     FX = np.cumsum(fX) * dx
     
-    interp = interp1d(FX, x, kind='linear', bounds_error=False)
+    interp = interp1d(FX, x, kind='linear', bounds_error=False,
+                      fill_value=x[-1])
 
     samples = interp(np.random.rand(N))
 

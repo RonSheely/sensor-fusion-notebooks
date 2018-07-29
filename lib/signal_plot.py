@@ -198,6 +198,14 @@ def hist_plot(t, x, **kwargs):
 
     axes = hist_plot_func(t, x, **kwargs)
     return axes.figure
+
+def hist_plot2(t, x, t2, x2, **kwargs):
+
+    axes, kwargs = create_axes(2, **kwargs)
+
+    hist_plot_func(t, x, axes=axes[0], **kwargs)
+    hist_plot_func(t2, x2, axes=axes[1], **kwargs)    
+    return axes[0].figure
         
 def signal_plot_with_hist(t, x, **kwargs):
 
