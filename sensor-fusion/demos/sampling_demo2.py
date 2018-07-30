@@ -25,7 +25,7 @@ def sampling_demo2_plot(dist=distributions[0], muX=0, sigmaX=1, N=1000, seed=1):
     np.random.seed(seed)
     
     Nx = 801
-    x = np.linspace(-50, 50, Nx)
+    x = np.linspace(-10, 10, Nx)
     dx = x[1] - x[0]    
     
     fX = pdf(x, muX, sigmaX, dist)    

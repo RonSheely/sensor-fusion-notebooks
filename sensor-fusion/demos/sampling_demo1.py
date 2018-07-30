@@ -22,7 +22,7 @@ def pdf(x, muX, sigmaX, distribution):
 def sampling_demo1_plot(dist=distributions[0], muX=0, sigmaX=1, N=1000):
 
     Nx = 801
-    x = np.linspace(-50, 50, Nx)
+    x = np.linspace(-10, 10, Nx)
     dx = x[1] - x[0]    
     
     fX = pdf(x, muX, sigmaX, dist)    
