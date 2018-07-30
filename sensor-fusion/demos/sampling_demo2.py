@@ -1,6 +1,5 @@
 # M. P. Hayes UCECE
 import numpy as np
-from matplotlib.pyplot import show
 from scipy.interpolate import interp1d
 from ipywidgets import interact, interactive, fixed, interact
 from .lib.signal_plot import hist_plot

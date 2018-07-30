@@ -1,4 +1,4 @@
-from numpy import zeros_like, ones_like, exp, sqrt, pi, average
+from numpy import zeros_like, ones_like, exp, sqrt, pi, average, trapz
 
 class KDE(object):
     """1-D Kernel density estimation (KDE)"""
@@ -34,10 +34,5 @@ class KDE(object):
         for m in range(Ns):
             pdf += self.weights[m] * exp(-(values - self.samples[m])**2 / (2 * self.sigmak**2)) / (self.sigmak * sqrt(2 * pi)) / Ns
 
+        pdf /= trapz(pdf, values)
         return pdf
-
-
-
-
-
-        
