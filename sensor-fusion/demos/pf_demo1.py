@@ -39,10 +39,11 @@ def pf_demo1_plot(v=2.0, sigmaX0=0.1, sigmaV=0.4, sigmaW=0.4,
     C = 1
     D = 0
 
-    Nx = 801
+    Nx = 1000
     x = np.linspace(-10, 40, Nx)
     
-    dist = 'uniform'
+    #dist = 'uniform'
+    dist = 'gaussian'    
     fX = pdf(x, 0, sigmaX0, dist)
 
     px_initial = sample(x, fX, M)
