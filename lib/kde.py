@@ -17,7 +17,9 @@ class KDE(object):
         var = average((self.samples - mean)**2, weights=self.weights)
         sd = sqrt(var)
 
-        # Use Silverman's approximation for std dev of kernel.
+        # Use Silverman's approximation for std dev of kernel.  Note,
+        # this can yield widely inaccurate estimates when the density
+        # is not close to being normal.
         if sd == 0.0:
             sd = 1e-6
         self.sigmak = 1.06 * sd * Ns ** (-1.0 / 5)
