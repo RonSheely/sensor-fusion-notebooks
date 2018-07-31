@@ -105,7 +105,7 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
     ax.legend()
 
 def pf_demo1():
-    interact(pf_demo1_plot, step=(1, 5), M=(10, 100, 10),
+    interact(pf_demo1_plot, step=(1, 5), M=(10, 200, 10),
              v=(1.0, 4.0, 0.2),
              distX0=distributions,
              sigmaX0=(0.1, 1, 0.1),
