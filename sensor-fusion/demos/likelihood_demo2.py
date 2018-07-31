@@ -18,14 +18,14 @@ def pdf(x, muX, sigmaX, distribution):
     raise ValueError('Unknown distribution %s' % distribution)
 
 def likelihood_demo2_plot(z=2, a=0.3, b=0.1,
-                          noise_dist=distributions[0]):
+                          distV=distributions[0]):
 
     Nx = 801
     x = np.linspace(-5, 5, Nx)
 
     sigmaV = a * abs(x) + b
     
-    fZgX = pdf(x, z, sigmaV, noise_dist)
+    fZgX = pdf(x, z, sigmaV, distV)
 
     fig = figure(figsize=(10, 5))
     ax = fig.add_subplot(111)
@@ -39,4 +39,4 @@ def likelihood_demo2_plot(z=2, a=0.3, b=0.1,
 def likelihood_demo2():
     interact(likelihood_demo2_plot, a=(0.1, 1, 0.1), b=(0.1, 1, 0.1),
              z=(-4, 4, 1),
-             noise_dist=distributions)
+             distV=distributions)
