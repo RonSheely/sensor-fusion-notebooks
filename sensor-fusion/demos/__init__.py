@@ -12,6 +12,7 @@ from .bayes_demo1 import *
 from .bayes_demo2 import *
 from .likelihood_demo1 import *
 from .likelihood_demo2 import *
+from .likelihood_demo3 import *
 from .sampling_demo1 import *
 from .sampling_demo2 import *
 from .sampling_demo3 import *

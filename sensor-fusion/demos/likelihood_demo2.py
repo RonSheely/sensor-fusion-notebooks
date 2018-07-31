@@ -38,5 +38,4 @@ def likelihood_demo2_plot(z=2, a=0.3, b=0.1,
 
 def likelihood_demo2():
     interact(likelihood_demo2_plot, a=(0.1, 1, 0.1), b=(0.1, 1, 0.1),
-             z=(-4, 4, 1),
-             distV=distributions)
+             z=(-4, 4, 1), distV=distributions)
