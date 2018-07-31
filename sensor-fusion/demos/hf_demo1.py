@@ -49,7 +49,7 @@ def hf_demo1_plot(distX0='gaussian', sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
         for i in range(len(hx)):
             total = 0
             for j in range(len(hx)):
-                total += fXh_initial[j] * gauss(hx[j] - hx[i] + v * dt, 0, sigmaW)
+                total += fXh_initial[j] * gauss(hx[i] - hx[j] - v * dt, 0, sigmaW)
             fXh_prior[i] = total * dhx
             
         z = C * m * dt * v + np.random.randn(1) * sigmaV
