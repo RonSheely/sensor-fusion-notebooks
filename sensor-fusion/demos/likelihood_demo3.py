@@ -4,7 +4,7 @@ from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import subplots
 from .lib.utils import gauss
 
-def likelihood_demo3_plot(sigmaV=0.5, z=2):
+def likelihood_demo3_plot(sigmaV=0.2, z=2):
 
     Nx = 801
     x = np.linspace(0, 5, Nx)
