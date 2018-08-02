@@ -9,6 +9,7 @@ from .BLUE_demo2 import *
 from .BLUE_demo3 import *
 from .BLUE_demo4 import *
 from .BLUE_demo5 import *
+from .bivariate_gaussian_demo1 import *
 
 # mcepr broken for python3
 #from .monte_carlo_demo1 import *

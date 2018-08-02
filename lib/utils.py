@@ -49,3 +49,30 @@ def trap2(t, top, base):
     T = 0.5 * (base + top)
     alpha = (base - top) / (base + top)
     return trap(t / T, alpha)
+
+
+def mgauss(vx, vmu, K):
+
+    N = vx.shape[-1]
+
+    Kinv = np.linalg.inv(K)
+    Kdet = np.linalg.det(K)
+
+    arg = np.dot(np.dot((vx - vmu).T, Kinv), (vx - vmu))
+    
+    return np.exp(-0.5 * arg) / np.sqrt((2 * np.pi) ** N * Kdet)
+
+
+def mgauss2(x, y, vmu, vsigma, rho):
+
+    K = np.array(((vsigma[0]**2, rho * vsigma[0] * vsigma[1]), (rho * vsigma[0] * vsigma[1], vsigma[1]**2)))
+        
+    mg = np.zeros((len(y), len(x)))
+    
+    for n, y1 in enumerate(y):
+        for m, x1 in enumerate(x):
+            
+            vx = np.array((x1, y1))
+            mg[n, m] = mgauss(vx, vmu, K)
+
+    return mg
