@@ -31,7 +31,7 @@ def sample(x, fX, M):
 
 
 def pf_demo1_plot(distX0='gaussian', sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
-                  seed=1, M=10, resample=False, kde=True):
+                  seed=1, M=10, resample=False, kde=True, annotate=False):
 
     np.random.seed(seed)
 
@@ -44,6 +44,9 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
     C = 1
     D = 0
 
+    if annotate:
+        M = 5
+    
     Nx = 1000
     x = np.linspace(-10, 40, Nx)
     
@@ -79,8 +82,14 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
     width = 0.02
     alpha = 0.5
     ax.bar(px_initial, weights_initial, width=width, linewidth=0, alpha=alpha, label='$X_{%d}$ initial' % (m - 1))
+    if annotate:
+        for m in range(M):
+            ax.text(px_initial[m], weights_initial[m] * 1.05, '%d' % m)
 
     ax.bar(px_prior, weights_prior, width=width, linewidth=0, alpha=alpha, label='$\hat{X}_{%d}^{-}$ prior' % m)
+    if annotate:
+        for m in range(M):
+            ax.text(px_prior[m], weights_prior[m] * 1.05, '%d' % m)        
 
     ax.bar(px_posterior, weights_posterior, width=width, linewidth=0, alpha=alpha, label='$\hat{X}_{%d}^{+}$ posterior' % m)
 
