@@ -28,7 +28,7 @@ def bivariate_gaussian_demo2_plot(muX=0, sigmaX=1, muY=0, sigmaY=1, rhoXY=0):
 
 def bivariate_gaussian_demo2():
     interact(bivariate_gaussian_demo2_plot, muX=(-5, 5), sigmaX=(0.01, 5, 0.01),
-             muY=(-5, 5), sigmaY=(0.01, 5, 0.01), rhoXY=(-0.95,0.95,0.05))
+             muY=(-5, 5), sigmaY=(0.01, 5, 0.01), rhoXY=(-0.95,0.99,0.05))
     
     
 
