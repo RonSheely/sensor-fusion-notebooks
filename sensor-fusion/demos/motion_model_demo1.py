@@ -1,5 +1,6 @@
 # M. P. Hayes UCECE
 import numpy as np
+from matplotlib.pyplot import arrow
 from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import figure, show, savefig, rcParams
 
@@ -36,13 +37,15 @@ class Robot(object):
 def motion_model_demo1_plot(v=1, omega=0, heading=90, steps=10):
 
     x = np.zeros(steps + 1)
-    y = np.zeros(steps + 1)    
+    y = np.zeros(steps + 1)
+    theta = np.zeros(steps + 1)        
     
     robot = Robot(heading=np.radians(heading))
 
     for m in range(steps + 1):
         x[m] = robot.x
         y[m] = robot.y
+        theta[m] = robot.heading        
         robot.transition(v, omega, dt=1)
 
     fig = figure(figsize=(10, 5))
@@ -52,7 +55,16 @@ def motion_model_demo1_plot(v=1, omega=0, heading=90, steps=10):
     ax.grid(True)
     #ax.axis('equal')
 
-    ax.plot(x, y, 'o')
+    #ax.plot(x, y, 'o')
+    
+    dx = 0.2 * np.cos(theta)
+    dy = 0.2 * np.sin(theta)    
+
+    opt = {'head_width': 0.4, 'head_length': 0.4, 'width': 0.2,
+           'length_includes_head': True}
+    
+    for m in range(len(x)):
+        ax.arrow(x[m], y[m], dx[m], dy[m], **opt, color='blue')
     
 
 def motion_model_demo1():
