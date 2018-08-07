@@ -12,17 +12,11 @@ class Robot(object):
         self.x = x
         self.y = y
         self.heading = heading
-        self.v = 0
-        self.omega = 0
-
 
     def transition(self, v, omega, dt=0.1):
 
         from numpy import sin, cos
         
-        self.v = v
-        self.omega = omega
-
         hp = self.heading
 
         if omega == 0.0:
