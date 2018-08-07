@@ -25,12 +25,12 @@ def sonar1_stats_demo1_plot(N=20, ignore_outliers=True):
     stds = np.zeros(N)
     
     for n in range(N):
-        r1 = r[n] - 0.5 * dr
-        r2 = r[n] + 0.5 * dr
+        dmin = r[n] - 0.5 * dr
+        dmax = r[n] + 0.5 * dr
         if ignore_outliers:
-            m = (distance > r1) & (distance < r2) & (abs(error) < 1)
+            m = (distance > dmin) & (distance < dmax) & (abs(error) < 0.2)
         else:
-            m = (distance > r1) & (distance < r2)        
+            m = (distance > dmin) & (distance < dmax)        
 
         means[n] = error[m].mean()
         stds[n] = error[m].std()
