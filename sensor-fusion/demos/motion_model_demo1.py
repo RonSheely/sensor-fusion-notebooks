@@ -63,6 +63,6 @@ def motion_model_demo1_plot(v=1, omega=0, heading=90, steps=10):
 
 def motion_model_demo1():
     interact(motion_model_demo1_plot, v=(0, 2, 0.1), omega=(-2, 2, 0.1),
-             steps=(1, 10),
+             steps=(0, 10),
              heading=(0, 180, 15), continuous_update=False)
     

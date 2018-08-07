@@ -15,14 +15,23 @@ def sonar1_hist_demo1_plot(distance=1.0, width=0.5, error_max=0.2):
     
     error = sonar1 - distance1
 
-    m = (distance1 < (distance + 0.5 * width)) & (distance1 > (distance - 0.5 * width))
+    dmin = distance - 0.5 * width
+    dmax = distance + 0.5 * width    
+    
+    m = (distance1 < dmax) & (distance1 > dmin)
 
     bins = np.linspace(-error_max, error_max, 100)
     
-    axes, kwargs = create_axes(1)
-    axes.hist(error[m], bins=bins)
-    axes.set_xlabel('Error (m)')
-    axes.set_xlim(-error_max, error_max)    
+    axes, kwargs = create_axes(2)
+    axes[0].plot(distance1, error, '.', alpha=0.2)
+    axes[0].set_xlabel('Distance (m)')
+    axes[0].set_ylabel('Error (m)')
+    axes[0].set_ylim(-error_max, error_max)
+    axes[0].axvspan(dmin, dmax, color='orange', alpha=0.4)
+    
+    axes[1].hist(error[m], bins=bins)
+    axes[1].set_xlabel('Error (m)')
+    axes[1].set_xlim(-error_max, error_max)    
 
 def sonar1_hist_demo1():
     interact(sonar1_hist_demo1_plot, distance=(0, 3.5, 0.2),

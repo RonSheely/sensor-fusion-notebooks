@@ -56,7 +56,7 @@ def particles_motion_model_demo1_plot(Xmin=-1, Xmax=1,
     ax.grid(True)
 
     for n in range(steps + 1):
-        colour = ['red', 'orange', 'green', 'blue'][n % 4]
+        colour = ['red', 'orange', 'green', 'blue', 'magenta'][n % 5]
         
         for m, robot in enumerate(robots):
 

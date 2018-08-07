@@ -75,6 +75,6 @@ def odom_motion_model_demo1():
     interact(odom_motion_model_demo1_plot, d=(0, 2, 0.1),
              phi1=(-180, 180, 15),
              phi2=(-180, 180, 15),             
-             steps=(1, 10),
+             steps=(0, 10),
              heading=(0, 180, 15), continuous_update=False)
     
