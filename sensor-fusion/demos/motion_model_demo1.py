@@ -40,16 +40,13 @@ def motion_model_demo1_plot(v=1, omega=0, heading=90, steps=10):
         x[m] = robot.x
         y[m] = robot.y
         theta[m] = robot.heading        
-        robot.transition(v, omega, dt=1)
+        robot.transition(v, np.radians(omega), dt=1)
 
     fig = figure(figsize=(10, 5))
     ax = fig.add_subplot(111)
     ax.set_xlim(-10, 10)
     ax.set_ylim(0, 10)
     ax.grid(True)
-    #ax.axis('equal')
-
-    #ax.plot(x, y, 'o')
     
     dx = 0.2 * np.cos(theta)
     dy = 0.2 * np.sin(theta)    
@@ -62,7 +59,6 @@ def motion_model_demo1_plot(v=1, omega=0, heading=90, steps=10):
     
 
 def motion_model_demo1():
-    interact(motion_model_demo1_plot, v=(0, 2, 0.1), omega=(-2, 2, 0.1),
-             steps=(0, 10),
-             heading=(0, 180, 15), continuous_update=False)
+    interact(motion_model_demo1_plot, v=(0, 2, 0.1), omega=(-60, 60, 15),
+             steps=(0, 10), heading=(0, 180, 15), continuous_update=False)
     
