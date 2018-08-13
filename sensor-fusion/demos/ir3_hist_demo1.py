@@ -68,7 +68,7 @@ def ir3_hist_demo1_plot(distance=1.0, width=0.5):
 
     axes[1].hist(error[m], bins=bins, color='orange')
     axes[1].set_xlabel('Measurement')
-    axes[0].set_xlabel('Count')    
+    axes[1].set_ylabel('Count')    
     axes[1].set_xlim(zmin, zmax)    
 
 def ir3_hist_demo1():
