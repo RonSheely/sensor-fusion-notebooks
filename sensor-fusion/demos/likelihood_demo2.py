@@ -31,7 +31,7 @@ def likelihood_demo2_plot(z=2, a=0.3, b=0.1,
     ax = fig.add_subplot(111)
     ax.grid(True)
 
-    ax.plot(x, fZgX, '--', label='$f_{Z|X}(%d|x)$ likelihood' % z)
+    ax.plot(x, fZgX, '--', label='$l_{X|Z}(x|%d)$ likelihood' % z)
 
     ax.legend()
     
