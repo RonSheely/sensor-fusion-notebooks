@@ -17,16 +17,20 @@ def pdf(x, muX, sigmaX, distribution):
         return 1.0 * ((x >= xmin) & (x <= xmax)) / (xmax - xmin)
     raise ValueError('Unknown distribution %s' % distribution)
 
-def bayes_demo1_plot(muX=0, sigmaX=1, sigmaV=0.5, z=2,
+def bayes_demo3_plot(muX=2, sigmaX=0.5, sigmaV=0.2, z=1,
                      distX=distributions[0],
                      distV=distributions[0]):
 
     Nx = 801
-    x = np.linspace(-5, 5, Nx)
+    x = np.linspace(0, 5, Nx)
 
+    d = 0.5
+    a = 5.0 / d
+
+    h = (a * x) * (x <= d) + (a * d**2 / (x + 1e-6)) * (x > d)
+
+    fZgX = pdf(z - h, 0, sigmaV, distV)
     fX = pdf(x, muX, sigmaX, distX)
-    fV = pdf(x, 0, sigmaV, distV)
-    fZgX = pdf(x, z, sigmaV, distV)
 
     fXgZ = fZgX * fX
     eta = np.trapz(fXgZ, x)
@@ -43,8 +47,7 @@ def bayes_demo1_plot(muX=0, sigmaX=1, sigmaV=0.5, z=2,
     ax.legend()
     
 
-def bayes_demo1():
-    interact(bayes_demo1_plot, muX=(-2, 2),
-             sigmaX=(0.01, 5, 0.01), sigmaV=(0.01, 5, 0.01),
-             z=(-4, 4, 1),
+def bayes_demo3():
+    interact(bayes_demo3_plot, muX=(0, 4, 0.2), sigmaX=(0.01, 5, 0.01),
+             sigmaV=(0.01, 0.5, 0.01), z=(0, 5, 0.1),
              distX=distributions, distV=distributions)

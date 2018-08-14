@@ -14,6 +14,7 @@ from .linear_transformation_demo1 import *
 from .nonlinear_transformation_demo1 import *
 from .bayes_demo1 import *
 from .bayes_demo2 import *
+from .bayes_demo3 import *
 from .likelihood_demo1 import *
 from .likelihood_demo2 import *
 from .likelihood_demo3 import *
