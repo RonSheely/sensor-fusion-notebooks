@@ -1,7 +1,7 @@
 # M. P. Hayes UCECE
 import numpy as np
 from ipywidgets import interact, interactive, fixed
-from .lib.signal_plot import signal_plot3
+from .lib.signal_plot import signal_overplot3
 from .lib.utils import gauss
 
 def BLUE_demo3_plot(sigmaZ1=1.0, sigmaZ2=2.0, w1=0.5):
@@ -21,7 +21,7 @@ def BLUE_demo3_plot(sigmaZ1=1.0, sigmaZ2=2.0, w1=0.5):
     fZ2 = gauss(z, muZ2, sigmaZ2)    
     fZ = gauss(z, muZ, sigmaZ)
     
-    signal_plot3(z, fZ1, z, fZ2, z, fZ, ylim=(0, 1.0))
+    signal_overplot3(z, fZ1, z, fZ2, z, fZ,  ('Z1', 'Z2', 'Z'), ylim=(0, 0.5))
 
 def BLUE_demo3():
     interact(BLUE_demo3_plot,

@@ -22,7 +22,7 @@ def rv_sum_demo1_plot(muX=0, sigmaX=1, N=5, distribution=distributions[1]):
     Nx = 801
     x = np.linspace(-50, 50, Nx)
     dx = x[1] - x[0]    
-    offset = int(-x[0] / dx)
+    offset = int(-x[0] / dx) + 1
     
     fZ = pdf(x, muX, sigmaX, distribution)
     for n in range(1, N):
