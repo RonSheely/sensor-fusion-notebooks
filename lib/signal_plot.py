@@ -182,7 +182,17 @@ def signal_plot_with_interpolated(t1, x1, t2, x2, **kwargs):
     kwargs.pop('ylim')
     p1.axes.plot(t2, x2, color='orange', **kwargs)
     return axes.figure
-    
+
+def signal_overplot3(t1, x1, t2, x2, t3, x3, labels, **kwargs):    
+
+    axes, kwargs = create_axes(1, **kwargs)
+
+    signal_plot_func(t1, x1, axes=axes, linestyle='-', label=labels[0], **kwargs)
+    signal_plot_func(t2, x2, axes=axes, linestyle='-.', label=labels[1], **kwargs)
+    signal_plot_func(t3, x3, axes=axes, linestyle='--', label=labels[2], **kwargs)
+    axes.legend()
+    return axes.figure    
+
 def signal_plot3(t1, x1, t2, x2, t3, x3, **kwargs):    
 
     axes, kwargs = create_axes(3, **kwargs)
