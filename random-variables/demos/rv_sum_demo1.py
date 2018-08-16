@@ -2,22 +2,7 @@
 import numpy as np
 from ipywidgets import interact, interactive, fixed
 from .lib.signal_plot import signal_plot
-from .lib.utils import gauss
-
-distributions = ['gaussian', 'uniform']
-
-
-def pdf(x, muX, sigmaX, distribution):
-
-    if distribution == 'gaussian':
-        return gauss(x, muX, sigmaX)
-    elif distribution == 'uniform':
-        xmin = muX - np.sqrt(12) * sigmaX / 2
-        xmax = muX + np.sqrt(12) * sigmaX / 2
-        u = 1.0 * ((x >= xmin) & (x <= xmax))
-        u /= np.trapz(u, x)
-        return u
-    raise ValueError('Unknown distribution %s' % distribution)
+from .lib.utils import gauss, pdf, distributions
 
 def rv_sum_demo1_plot(muX=0, sigmaX=1, N=5, distribution=distributions[1]):
 

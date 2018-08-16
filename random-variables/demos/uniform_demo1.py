@@ -5,13 +5,18 @@ from matplotlib.pyplot import show
 from .lib.signal_plot import signal_plot
 from .lib.utils import gauss
 
-def uniform_demo1_plot(a=-1, b=1):
+def uniform_demo1_plot(a=-1, b=1, autoscale=False):
 
     N = 401
     x = np.linspace(-10, 10, N)
 
     fX = 1.0 * ((x >= a) & (x <= b)) / (abs(b - a) + 1e-12)
-    fig = signal_plot(x, fX)
+
+    ylim = None
+    if not autoscale:
+        ylim = [0, 0.55]
+    
+    fig = signal_plot(x, fX, ylim=ylim)
     mu_X = 0.5 * (a + b)
     sigma_X = abs(b - a) / np.sqrt(12)
     if b < a:

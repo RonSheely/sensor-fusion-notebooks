@@ -5,7 +5,7 @@ from matplotlib.pyplot import show
 from .lib.signal_plot import signal_plot2
 from .lib.utils import gauss
 
-def gauss_scaled_demo1_plot(muX=0, sigmaX=1, a=1):
+def gauss_scaled_demo1_plot(muX=0, sigmaX=1, a=1, autoscale=False):
 
     N = 401
     x = np.linspace(-10, 10, N)
@@ -16,10 +16,11 @@ def gauss_scaled_demo1_plot(muX=0, sigmaX=1, a=1):
     fX = gauss(x, muX, sigmaX)
     fY = gauss(x, muY, sigmaY)
 
-    fXmax = max(fX)
-    fYmax = max(fY)    
+    ylim = None
+    if not autoscale:
+        ylim = [0, 0.55]    
     
-    signal_plot2(x, fX, x, fY, ylim=(0, max(fXmax, fYmax)))
+    signal_plot2(x, fX, x, fY, ylim=ylim)
     show()
 
 def gauss_scaled_demo1():

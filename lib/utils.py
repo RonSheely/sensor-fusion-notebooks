@@ -76,3 +76,20 @@ def mgauss2(x, y, vmu, vsigma, rho):
             mg[n, m] = mgauss(vx, vmu, K)
 
     return mg
+
+
+distributions = ['gaussian', 'uniform']
+
+
+def pdf(x, muX, sigmaX, distribution):
+
+    if distribution == 'gaussian':
+        return gauss(x, muX, sigmaX)
+    elif distribution == 'uniform':
+        xmin = muX - np.sqrt(12) * sigmaX / 2
+        xmax = muX + np.sqrt(12) * sigmaX / 2
+        u = 1.0 * ((x >= xmin) & (x <= xmax))
+        u /= np.trapz(u, x)
+        return u
+    raise ValueError('Unknown distribution %s' % distribution)
+

@@ -1,4 +1,5 @@
 from .rv_sum_demo1 import *
+from .rv_sum_demo2 import *
 from .rv_average_demo1 import *
 from .rv_average_demo2 import *
 from .gauss_scaled_demo1 import *
