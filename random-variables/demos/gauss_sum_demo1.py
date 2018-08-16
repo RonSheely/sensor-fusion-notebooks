@@ -7,7 +7,7 @@ from .lib.utils import gauss
 def gauss_sum_demo1_plot(muX=0, sigmaX=1, muY=0, sigmaY=1):
 
     N = 401
-    x = np.linspace(-10, 10, N)
+    x = np.linspace(-8, 8, N)
 
     fX = gauss(x, muX, sigmaX)
     fY = gauss(x, muY, sigmaY)

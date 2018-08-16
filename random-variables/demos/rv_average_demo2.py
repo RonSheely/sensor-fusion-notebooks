@@ -1,5 +1,6 @@
 # M. P. Hayes UCECE
 import numpy as np
+import numpy.ma as ma
 from ipywidgets import interact, interactive, fixed
 from .lib.signal_plot import signal_plot
 from .lib.utils import gauss
@@ -16,16 +17,13 @@ def pdf(x, muX, sigmaX, distribution):
         xmax = muX + np.sqrt(12) * sigmaX / 2
         u = 1.0 * ((x >= xmin) & (x <= xmax))
         u /= np.trapz(u, x)
-        return u
+        return u        
     raise ValueError('Unknown distribution %s' % distribution)
 
-def rv_sum_demo1_plot(muX=0, sigmaX=1, N=5, distribution=distributions[1]):
+def rv_average_demo2_plot(muX=0, sigmaX=1, N=5, distribution=distributions[1]):
 
-    # This is subject to numerical error especially with a uniform
-    # distribution.  
-    
-    Nx = 501
-    x = np.linspace(-10, 10, Nx)
+    Nx = 201
+    x = np.linspace(-5, 5, Nx)
     dx = x[1] - x[0]    
 
     fX = pdf(x, muX, sigmaX, distribution)
@@ -33,15 +31,19 @@ def rv_sum_demo1_plot(muX=0, sigmaX=1, N=5, distribution=distributions[1]):
     for n in range(1, N):
         fZ = np.convolve(fZ, fX) * dx
 
-    M = fZ.shape[-1]
-    x = np.arange(-M // 2, M // 2) * dx
-    mx = (x < 8) & (x > -8)    
-    
-    fG = gauss(x, muX * N, sigmaX * np.sqrt(N))
+    fZ = fZ[::N] * N
+        
+    fG = gauss(x, muX / N, sigmaX / np.sqrt(N))
+        
+    mx = (x < 5) & (x > -5)
 
-    fig = signal_plot(x[mx], fZ[mx])
-    fig.axes[0].plot(x[mx], fG[mx], '--')
+    lfZ = ma.log(fZ)
+    lfG = ma.log(fG)    
+        
+    fig = signal_plot(x[mx], lfZ[mx])
+    fig.axes[0].plot(x[mx], lfG[mx], '--')
+    fig.axes[0].set_ylim(-35, 5)
 
-def rv_sum_demo1():
-    interact(rv_sum_demo1_plot, muX=(-2, 2), sigmaX=(0.01, 2, 0.01),
+def rv_average_demo2():
+    interact(rv_average_demo2_plot, muX=(-2, 2), sigmaX=(0.01, 5, 0.01),
              distribution=distributions, N=(1, 100))
