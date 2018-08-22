@@ -23,3 +23,4 @@ from .sampling_demo2 import *
 from .sampling_demo3 import *
 from .pf_demo1 import *
 from .hf_demo1 import *
+from .dwa_demo1 import *
