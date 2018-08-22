@@ -3,6 +3,7 @@ import numpy as np
 from matplotlib.pyplot import subplots, arrow
 from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import figure, show, savefig, rcParams
+from .lib.robot import robot_draw, Robot
 
 def motion_model(pose0, v, omega, dt):
 
@@ -64,17 +65,9 @@ def motion_decompose_demo1_plot(x0=0, y0=0, theta0=0, v=2, omega=0):
     ax.set_ylim(-2.5, 2.5)
     ax.grid(True)
 
-    opt = {'head_width': 0.4, 'head_length': 0.4, 'width': 0.2,
-           'length_includes_head': True}
-
-    dx0 = 0.2 * np.cos(pose0[2])
-    dy0 = 0.2 * np.sin(pose0[2]) 
-    ax.arrow(pose0[0], pose0[1], dx0, dy0, **opt, color='blue')
-
-    dx1 = 0.2 * np.cos(pose1[2])
-    dy1 = 0.2 * np.sin(pose1[2]) 
-    ax.arrow(pose1[0], pose1[1], dx1, dy1, **opt, color='blue')        
-
+    robot_draw(ax, pose0[0], pose0[1], pose0[2], colour='blue')
+    robot_draw(ax, pose1[0], pose1[1], pose1[2], colour='orange')    
+    
     if True:
         print('phi1 = %.1f deg, d = %.1f m, phi2 = %.1f deg' %
               (np.degrees(phi1), d, np.degrees(phi2)))

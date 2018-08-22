@@ -93,3 +93,29 @@ def pdf(x, muX, sigmaX, distribution):
         return u
     raise ValueError('Unknown distribution %s' % distribution)
 
+
+###############################################################################
+# Functions for working with angles (in radians)
+
+def wrapto2pi(angle):
+    """Convert angle into range [0, 2 * pi)."""
+    return angle % (2 * np.pi)
+
+
+def wraptopi(angle):
+    """Convert angle into range [-pi, pi)."""
+    return wrapto2pi(angle + np.pi) - np.pi
+
+
+def angle_difference(angle1, angle2):
+    """Return principal difference angle, angle2 - angle1  with return value in range [-pi, pi)."""
+    return ((((angle2 - angle1) % (2 * np.pi)) + (3 * np.pi)) % (2 * np.pi)) - np.pi
+
+
+def abs_angle_difference(angle1, angle2):
+
+    d = angle_difference(angle1, angle2)
+    if (d < 0):
+        d += np.pi * 2
+    return
+    

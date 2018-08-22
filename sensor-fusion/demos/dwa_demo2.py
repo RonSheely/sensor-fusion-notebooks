@@ -1,33 +1,34 @@
 # M. P. Hayes UCECE
 import numpy as np
-from matplotlib.pyplot import arrow, Circle
+from matplotlib.pyplot import arrow, Circle, Arrow
 from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import figure, show, savefig, rcParams, subplots
 from matplotlib.ticker import NullFormatter
 from .lib.utils import wraptopi, angle_difference
+from .lib.robot import robot_draw, Robot
 
-class Robot(object):
+def obstacle_distance(x, y, heading, obs, d=0):
 
-    def __init__(self, x=0, y=0, heading=np.pi/2):
+    # line x = x_1 + t sin theta, y = y_1 + t cos theta
+    # circle (x - x_0)**2 + (y - y_0)**2 = r**2
+    # solve for t to find distance
+    
+    theta = np.radians(heading)
+    dx = x - obs[0]
+    dy = y - obs[1]
+    r = obs[2] + d
 
-        self.x = x
-        self.y = y
-        self.heading = heading
+    b = 2 * (dx * np.cos(theta) + dy * np.sin(theta))
+    c = dx**2 + dy**2 - r**2
 
-    def transition(self, v, omega, dt=0.1):
-
-        from numpy import sin, cos
-        
-        hp = self.heading
-
-        if omega == 0.0:
-            self.x += v * cos(hp) * dt
-            self.y += v * sin(hp) * dt
-        else:
-            self.x += -v / omega * sin(hp) + v / omega * sin(hp + omega * dt)
-            self.y += v / omega * cos(hp) - v / omega * cos(hp + omega * dt)
-            self.heading = wraptopi(hp + omega * dt)
-
+    d = (b / 2)**2 - c
+    if d < 0:
+        return None
+    
+    t1 = -b / 2 + np.sqrt(d)
+    t2 = -b / 2 - np.sqrt(d)
+    return min(t1, t2)
+            
 def objective(speed, speed_goal, heading, heading_goal):
 
     w1 = np.exp(-abs(speed - speed_goal) / 1.0)
@@ -49,8 +50,11 @@ def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt):
 
             
 def dwa_demo2_plot(dt=0.5, x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
-                   heading_goal=90, steps=10, obstacle=False):
+                   heading_goal=90, steps=10, obstacle=False, inflate=False):
 
+    # Robot diameter
+    d = 0.25
+        
     v_max = 4
     omega_max = 360
     a_max = 2
@@ -89,6 +93,10 @@ def dwa_demo2_plot(dt=0.5, x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
     # Region of all achievable speeds
     vax.plot((w1_min, w1_max, w1_max, w1_min, w1_min), (v1_min, v1_min, v1_max, v1_max, v1_min), '-', color='orange')    
 
+    vax.set_xlabel('$\omega$')
+    vax.set_ylabel('$v$')        
+
+    
     Nv = 9
     Nw = 9
 
@@ -104,8 +112,10 @@ def dwa_demo2_plot(dt=0.5, x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
 
     vax.imshow(weights, origin='lower', interpolation=None, aspect='auto',
               extent=(w1_min, w1_max, v1_min, v1_max))
+    vax.grid(True)
 
-
+    xax.set_xlabel('$x$')
+    xax.set_ylabel('$y$')    
     xax.set_xlim(-2, 2)
     xax.set_ylim(0, 4)
     xax.grid(True)
@@ -113,7 +123,13 @@ def dwa_demo2_plot(dt=0.5, x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
     if obstacle:
         for obs in obstacles:
             circle = Circle((obs[0], obs[1]), obs[2], color=obs[3], fill=True)
-        xax.add_artist(circle)
+            xax.add_artist(circle)            
+            if inflate:
+                circle = Circle((obs[0], obs[1]), obs[2] + d, color=obs[3],
+                                fill=True, alpha=0.5)
+                xax.add_artist(circle)
+
+        print(obstacle_distance(x, y, heading, obstacles[0], d))
     
     xv = np.zeros(steps + 1)
     yv = np.zeros(steps + 1)
@@ -127,16 +143,8 @@ def dwa_demo2_plot(dt=0.5, x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
         thetav[m] = robot.heading        
         robot.transition(v, np.radians(omega), dt=dt)
 
-    dx = 0.2 * np.cos(thetav)
-    dy = 0.2 * np.sin(thetav)
-
-    opt = {'head_width': 0.4, 'head_length': 0.4, 'width': 0.2,
-           'length_includes_head': True}
     for m in range(len(xv)):
-        xax.arrow(xv[m], yv[m], dx[m], dy[m], **opt, color='blue')
-    
-    vax.grid(True)
-    
+        robot_draw(xax, xv[m], yv[m], thetav[m], d)
 
 def dwa_demo2():
     interact(dwa_demo2_plot, x=(-4, 4, 0.5), y=(0, 4, 0.5),

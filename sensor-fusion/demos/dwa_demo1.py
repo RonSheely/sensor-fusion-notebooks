@@ -5,28 +5,7 @@ from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import figure, show, savefig, rcParams
 from matplotlib.ticker import NullFormatter
 from .lib.utils import wraptopi, angle_difference
-
-class Robot(object):
-
-    def __init__(self, x=0, y=0, heading=np.pi/2):
-
-        self.x = x
-        self.y = y
-        self.heading = heading
-
-    def transition(self, v, omega, dt=0.1):
-
-        from numpy import sin, cos
-        
-        hp = self.heading
-
-        if omega == 0.0:
-            self.x += v * cos(hp) * dt
-            self.y += v * sin(hp) * dt
-        else:
-            self.x += -v / omega * sin(hp) + v / omega * sin(hp + omega * dt)
-            self.y += v / omega * cos(hp) - v / omega * cos(hp + omega * dt)
-            self.heading = wraptopi(hp + omega * dt)
+from .lib.robot import Robot
 
 def objective(speed, speed_goal, heading, heading_goal):
 
@@ -47,7 +26,6 @@ def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt):
             weights[n, m] = objective(v, speed_goal,
                                       robot.heading, heading_goal)
 
-            
 def dwa_demo1_plot(dt=0.5, v_max=4, omega_max=360, a_max=2, alpha_max=180, v=1,
                    omega=0, heading=90, speed_goal=1, heading_goal=90):
 
@@ -95,6 +73,9 @@ def dwa_demo1_plot(dt=0.5, v_max=4, omega_max=360, a_max=2, alpha_max=180, v=1,
     ax.imshow(weights, origin='lower', interpolation=None, aspect='auto',
               extent=(w1_min, w1_max, v1_min, v1_max))
 
+    ax.set_xlabel('$\omega$')
+    ax.set_ylabel('$v$')        
+    
     ax.grid(True)
     
 
@@ -105,6 +86,4 @@ def dwa_demo1():
              a_max=(0.5, 2, 0.5), alpha_max=(30, 180, 15),
              heading=(0, 180, 15), heading_goal=(0, 180, 15),
              speed_goal=(0, 2, 0.1), continuous_update=False)
-    
-
     
