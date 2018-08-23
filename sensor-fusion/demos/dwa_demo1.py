@@ -48,7 +48,7 @@ def dwa_demo1_plot(dt=0.5, v_max=4, omega_max=360, a_max=2, alpha_max=180, v=1,
     extra_v = v_max * 0.05
     extra_w = w_max * 0.05        
     
-    fig = figure(figsize=(10, 5))
+    fig = figure(figsize=(5, 5))
     ax = fig.add_subplot(111)
 
     ax.set_xlim(w_min - extra_w, w_max + extra_w)
@@ -60,8 +60,8 @@ def dwa_demo1_plot(dt=0.5, v_max=4, omega_max=360, a_max=2, alpha_max=180, v=1,
     # Region of all achievable speeds
     ax.plot((w1_min, w1_max, w1_max, w1_min, w1_min), (v1_min, v1_min, v1_max, v1_max, v1_min), '-', color='orange')    
 
-    Nv = 9
-    Nw = 9
+    Nv = 7
+    Nw = 7
 
     weights = np.zeros((Nv, Nw))
     

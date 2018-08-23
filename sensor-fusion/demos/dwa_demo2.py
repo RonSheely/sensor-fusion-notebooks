@@ -126,8 +126,10 @@ def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
     vax.set_ylabel('$v$')        
 
     
-    Nv = 9
-    Nw = 9
+    #Nv = 9
+    #Nw = 9
+    Nv = 7
+    Nw = 7
 
     weights = np.zeros((Nv, Nw))
     
