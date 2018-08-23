@@ -7,13 +7,17 @@ from matplotlib.ticker import NullFormatter
 from .lib.utils import wraptopi, angle_difference
 from .lib.robot import robot_draw, Robot
 
-def obstacle_distance(x, y, heading, obs, d=0):
+def braking_distance(v, a_max):
+
+    return 0.5 * v**2 / a_max
+
+
+def obstacle_distance(x, y, theta, obs, d=0):
 
     # line x = x_1 + t sin theta, y = y_1 + t cos theta
     # circle (x - x_0)**2 + (y - y_0)**2 = r**2
     # solve for t to find distance
-    
-    theta = np.radians(heading)
+
     dx = x - obs[0]
     dy = y - obs[1]
     r = obs[2] + d
@@ -35,7 +39,8 @@ def objective(speed, speed_goal, heading, heading_goal):
     w2 = np.exp(-abs(angle_difference(heading, heading_goal)) / np.radians(30))
     return w1 * w2
             
-def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt):
+def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt,
+                   obstacles, x, y, d, a_max):
 
     ww = np.radians(ww)
     heading = np.radians(heading)
@@ -43,15 +48,36 @@ def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt):
     
     for m, w in enumerate(ww):
         for n, v in enumerate(vv):
-            robot = Robot(0, 0, heading)
+            robot = Robot(x, y, heading)
             robot.transition(v, w, dt)
-            weights[n, m] = objective(v, speed_goal,
-                                      robot.heading, heading_goal)
 
+            d_brake = braking_distance(v, a_max)
+
+            d_obs_min = 1e6
+            for obs in obstacles:
+                d_obs = obstacle_distance(robot.x, robot.y, robot.heading,
+                                          obs, d)
+                if d_obs is not None and d_obs < d_obs_min:
+                    d_obs_min = d_obs
+
+            clearance = d_obs_min - d_brake
+
+            if clearance < 0:
+                weights[n, m] = np.NaN
+            else:
+                weights[n, m] = objective(v, speed_goal,
+                                          robot.heading, heading_goal)
+                # Should determine clearance to nearest obstacle and
+                # penalise fast speeds close to obstacles.
+                # (1 - np.exp(-clearance / d))
+
+                
             
-def dwa_demo2_plot(dt=0.5, x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
-                   heading_goal=90, steps=10, obstacle=False, inflate=False):
+def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
+                   heading_goal=90, steps=10, obstacles=False, inflate=False):
 
+    dt = 0.5
+    
     # Robot diameter
     d = 0.25
         
@@ -76,8 +102,11 @@ def dwa_demo2_plot(dt=0.5, x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
     w1_min = max(w_min, w1_min)
     w1_max = min(w_max, w1_max)
 
-    obstacles = ((0.5, 3, 0.5, 'purple'), )
-    
+    if obstacles:
+        obstacles = ((0.5, 3, 0.5, 'purple'), )
+    else:
+        obstacles = ()        
+        
     extra_v = v_max * 0.05
     extra_w = w_max * 0.05    
     
@@ -105,7 +134,12 @@ def dwa_demo2_plot(dt=0.5, x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
     vv = np.linspace(v1_min, v1_max, Nv)
     ww = np.linspace(w1_min, w1_max, Nw)    
 
-    calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt)
+    dr = 0
+    if inflate:
+        dr = d
+    
+    calc_objective(weights, heading, vv, ww, speed_goal, heading_goal,
+                   dt, obstacles, x, y, dr, a_max)
     
     p1 = vax.transLimits.transform((w1_min, v1_min))
     p2 = vax.transLimits.transform((w1_max, v1_max))    
@@ -120,17 +154,14 @@ def dwa_demo2_plot(dt=0.5, x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
     xax.set_ylim(0, 4)
     xax.grid(True)
 
-    if obstacle:
-        for obs in obstacles:
-            circle = Circle((obs[0], obs[1]), obs[2], color=obs[3], fill=True)
-            xax.add_artist(circle)            
-            if inflate:
-                circle = Circle((obs[0], obs[1]), obs[2] + d, color=obs[3],
-                                fill=True, alpha=0.5)
-                xax.add_artist(circle)
-
-        print(obstacle_distance(x, y, heading, obstacles[0], d))
-    
+    for obs in obstacles:
+        circle = Circle((obs[0], obs[1]), obs[2], color=obs[3], fill=True)
+        xax.add_artist(circle)            
+        if inflate:
+            circle = Circle((obs[0], obs[1]), obs[2] + d, color=obs[3],
+                            fill=True, alpha=0.5)
+            xax.add_artist(circle)
+            
     xv = np.zeros(steps + 1)
     yv = np.zeros(steps + 1)
     thetav = np.zeros(steps + 1)        
