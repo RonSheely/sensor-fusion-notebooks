@@ -1,3 +1,3 @@
 # sensor-fusion-notebooks
 
-[Index](index.ipynb)
+[Index](sensor-fusion.ipynb)
