@@ -8,10 +8,7 @@ from .sonar1_fit_demo1 import *
 from .sonar1_fit_error_demo1 import *
 from .sonar1_fit_hist_demo1 import *
 from .sonar1_fit_stats_demo1 import *
-from .sonar1_stats_demo1 import *
-from .sonar1_error_demo1 import *
-from .sonar1_hist_demo1 import *
-from .sonar1_model_demo1 import *
+from .sonar1_fit_model_demo1 import *
 from .ir3_hist_demo1 import *
 from .kf_demo1 import *
 from .ekf_demo1 import *
