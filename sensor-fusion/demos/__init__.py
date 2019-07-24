@@ -3,6 +3,11 @@ from .motion_model_demo1 import *
 from .particles_motion_model_demo1 import *
 from .odom_motion_model_demo1 import *
 from .motion_decompose_demo1 import *
+from .sonar1_raw_demo1 import *
+from .sonar1_fit_demo1 import *
+from .sonar1_fit_error_demo1 import *
+from .sonar1_fit_hist_demo1 import *
+from .sonar1_fit_stats_demo1 import *
 from .sonar1_stats_demo1 import *
 from .sonar1_error_demo1 import *
 from .sonar1_hist_demo1 import *
