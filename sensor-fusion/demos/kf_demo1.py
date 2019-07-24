@@ -59,6 +59,7 @@ def kf_demo1_plot(step=1, v=2.0, sigmaX0=0.1, sigmaV=0.4, sigmaW=0.4,
     ax.plot(x[mx], fXpost[mx], label='$\hat{X}_{%d}^{+}$ posterior' % m)
 
     ax.legend()
+    ax.text(z, max(fXpost) + 0.5, 'z=%.2f' % z)
 
 def kf_demo1():
     interact(kf_demo1_plot, step=(1, 5), v=(1.0, 4.0, 0.2),

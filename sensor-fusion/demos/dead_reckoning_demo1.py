@@ -32,7 +32,7 @@ def pdf_byname(x, muX, name):
 
     return pdf(x, muX, sigmaX, distribution)
 
-def dead_reckoning_demo1_plot(steps=0, v=2, X0=beliefs[0], Wn=beliefs[3]):
+def dead_reckoning_demo1_plot(v=2, X0=beliefs[0], Wn=beliefs[3], steps=0):
 
     dt = 1
     
