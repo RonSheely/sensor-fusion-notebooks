@@ -24,6 +24,8 @@ from .sampling_demo0 import *
 from .sampling_demo1 import *
 from .sampling_demo2 import *
 from .sampling_demo3 import *
+from .inverse_transform_sampling_demo1 import *
+from .cdf_demo1 import *
 from .pf_demo1 import *
 from .hf_demo1 import *
 from .dwa_demo1 import *
