@@ -1,6 +1,6 @@
 # M. P. Hayes UCECE
 import numpy as np
-from ipywidgets import interact, interactive, fixed
+from ipywidgets import interact, interactive, fixed, Checkbox
 from scipy.interpolate import interp1d
 from matplotlib.pyplot import figure
 from .lib.utils import gauss
@@ -64,9 +64,9 @@ def hf_demo1_plot(distX0='gaussian', sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
 
     ax.bar(hx, fXh_initial, label='$X_{%d}$ initial' % (m - 1), edgecolor='black', width=dhx)
 
-    ax.bar(hx, fXh_prior, label='$\hat{X}_{%d}^{-}$ prior' % m, edgecolor='black', width=dhx)
+    ax.bar(hx, fXh_prior, label='$X_{%d}^{-}$ prior' % m, edgecolor='black', width=dhx)
 
-    ax.bar(hx, fXh_posterior, label='$\hat{X}_{%d}^{+}$ posterior' % m, edgecolor='black', width=dhx)
+    ax.bar(hx, fXh_posterior, label='$X_{%d}^{+}$ posterior' % m, edgecolor='black', width=dhx)
 
     ax.set_xlim(-1, 3)
     ax.set_xlabel('Position')    

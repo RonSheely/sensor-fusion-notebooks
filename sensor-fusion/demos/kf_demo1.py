@@ -54,9 +54,9 @@ def kf_demo1_plot(step=1, v=2.0, sigmaX0=0.1, sigmaV=0.4, sigmaW=0.4,
     fXpost = gauss(x, Xpostmean, np.sqrt(Xpostvar))
 
     ax.plot(x[mx], fXinitial[mx], ':', label='$X_{%d}$ initial' % (m - 1))        
-    ax.plot(x[mx], fXprior[mx], '--', label='$\hat{X}_{%d}^{-}$ prior' % m)
-    ax.plot(x[mx], fXinfer[mx], '-.', label='$\hat{X}_{%d}^{m}$ likelihood' % m)
-    ax.plot(x[mx], fXpost[mx], label='$\hat{X}_{%d}^{+}$ posterior' % m)
+    ax.plot(x[mx], fXprior[mx], '--', label='$X_{%d}^{-}$ prior' % m)
+    ax.plot(x[mx], fXinfer[mx], '-.', label='$X_{%d}^{m}$ likelihood' % m)
+    ax.plot(x[mx], fXpost[mx], label='$X_{%d}^{+}$ posterior' % m)
 
     ax.legend()
     ax.text(z, max(fXpost) + 0.5, 'z=%.2f' % z)

@@ -86,12 +86,12 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
         for m in range(M):
             ax.text(px_initial[m], weights_initial[m] * 1.05, '%d' % m)
 
-    ax.bar(px_prior, weights_prior, width=width, linewidth=0, alpha=alpha, label='$\hat{X}_{%d}^{-}$ prior' % m)
+    ax.bar(px_prior, weights_prior, width=width, linewidth=0, alpha=alpha, label='$X_{%d}^{-}$ prior' % m)
     if annotate:
         for m in range(M):
             ax.text(px_prior[m], weights_prior[m] * 1.05, '%d' % m)        
 
-    ax.bar(px_posterior, weights_posterior, width=width, linewidth=0, alpha=alpha, label='$\hat{X}_{%d}^{+}$ posterior' % m)
+    ax.bar(px_posterior, weights_posterior, width=width, linewidth=0, alpha=alpha, label='$X_{%d}^{+}$ posterior' % m)
 
     max_weight = max(max(weights_initial), max(weights_prior), max(weights_posterior))
     
