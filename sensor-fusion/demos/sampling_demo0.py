@@ -21,7 +21,7 @@ def pdf(x, muX, sigmaX, distribution):
     raise ValueError('Unknown distribution %s' % distribution)
 
 def sampling_demo0_plot(distX=distributions[0], muX=0, sigmaX=1,
-                        seed=1, N=2, show_pdf=False):
+                        seed=1, N=2, show_histogram=False):
 
     Nx = 801
     x = np.linspace(-10, 10, Nx)
@@ -36,13 +36,13 @@ def sampling_demo0_plot(distX=distributions[0], muX=0, sigmaX=1,
                       fill_value=x[-1])
 
     samples = interp(np.random.rand(N))
-    values = ','.join(['%.1f' % sample for sample in samples])
+    values = ', '.join(['%.1f' % sample for sample in samples])
 
     display(values)
     display('est muX = %.1f  est sigmaX = %.1f' % (np.mean(samples),
                                                    np.std(samples)))
 
-    if show_pdf:
+    if show_histogram:
         fig = hist_plot(x, samples, density=True)
         axes = fig.axes    
         axes[0].plot(x, fX, label='desired')
@@ -51,5 +51,5 @@ def sampling_demo0_plot(distX=distributions[0], muX=0, sigmaX=1,
 def sampling_demo0():
     interact(sampling_demo0_plot, distX=distributions,
              muX=(-2, 2), sigmaX=(0.01, 5, 0.01), seed=(1, 100, 1),
-             N=(1, 20, 1),  continuous_update=False)
+             N=(2, 100, 2),  continuous_update=False)
     
