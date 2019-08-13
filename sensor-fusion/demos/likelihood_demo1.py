@@ -18,7 +18,7 @@ def pdf(x, muX, sigmaX, distribution):
     raise ValueError('Unknown distribution %s' % distribution)
 
 def likelihood_demo1_plot(sigmaV=0.5, z=2,
-                          distV=distributions[0], condpdf=True):
+                          distV=distributions[0], show_condpdf=True):
 
     Nx = 801
     x = np.linspace(0.001, 5, Nx)
@@ -27,7 +27,7 @@ def likelihood_demo1_plot(sigmaV=0.5, z=2,
 
     fZgX = pdf(z - h, 0, sigmaV, distV)
 
-    fig, axes = subplots(2 + condpdf * 1, figsize=(10, 5))
+    fig, axes = subplots(2 + show_condpdf * 1, figsize=(10, 5))
     fig.tight_layout()
 
     axes[0].plot(x, h, color='orange', label='$h(x) = x$')
@@ -41,7 +41,7 @@ def likelihood_demo1_plot(sigmaV=0.5, z=2,
     axes[1].set_xlabel('$x$')
     axes[1].legend()
 
-    if condpdf:
+    if show_condpdf:
         zv = np.linspace(0, 5, 201)
         
         X, Z = np.meshgrid(x, zv)

@@ -4,7 +4,7 @@ from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import subplots
 from .lib.utils import gauss
 
-def likelihood_demo3_plot(sigmaV=0.2, z=2, condpdf=True):
+def likelihood_demo3_plot(sigmaV=0.2, z=2, show_condpdf=True):
 
     Nx = 801
     x = np.linspace(0, 5, Nx)
@@ -24,7 +24,7 @@ def likelihood_demo3_plot(sigmaV=0.2, z=2, condpdf=True):
     # invert values to achieve a monotonic function.
     x2 = np.interp(1 / z, 1 / h[m2], x[m2])
 
-    fig, axes = subplots(2 + condpdf * 1, figsize=(10, 5))
+    fig, axes = subplots(2 + show_condpdf * 1, figsize=(10, 5))
     fig.tight_layout()    
 
     axes[0].plot(x, h, color='orange', label='$h(x)$')
@@ -40,7 +40,7 @@ def likelihood_demo3_plot(sigmaV=0.2, z=2, condpdf=True):
     axes[1].set_xlabel('$x$')
     axes[1].legend()
 
-    if condpdf:
+    if show_condpdf:
         zv = np.linspace(0, 5, 201)
         
         X, Z = np.meshgrid(x, zv)
