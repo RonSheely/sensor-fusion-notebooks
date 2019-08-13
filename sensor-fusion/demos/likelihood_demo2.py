@@ -1,7 +1,7 @@
 # M. P. Hayes UCECE
 import numpy as np
 from ipywidgets import interact, interactive, fixed
-from matplotlib.pyplot import figure
+from matplotlib.pyplot import subplots
 from .lib.utils import gauss
 
 distributions = ['gaussian', 'uniform']
@@ -21,21 +21,28 @@ def likelihood_demo2_plot(z=2, a=0.3, b=0.1,
                           distV=distributions[0]):
 
     Nx = 801
-    x = np.linspace(-5, 5, Nx)
+    x = np.linspace(0.001, 5, Nx)
 
+    h = x
     sigmaV = a * abs(x) + b
     
-    fZgX = pdf(x, z, sigmaV, distV)
+    fZgX = pdf(z - h, 0, sigmaV, distV)
 
-    fig = figure(figsize=(10, 5))
-    ax = fig.add_subplot(111)
-    ax.grid(True)
+    fig, axes = subplots(2, figsize=(10, 5))
+    fig.tight_layout()    
 
-    ax.plot(x, fZgX, '--', label='$l_{X|Z}(x|%d)$ likelihood' % z)
+    axes[0].plot(x, h, color='orange', label='$h(x) = x$')
+    axes[0].plot(np.interp(z, h, x), z, 'o', color='orange')            
+    axes[0].grid(True)
+    axes[0].set_xlabel('$x$')
+    axes[0].set_ylabel('$z$')
+    axes[0].legend()    
 
-    ax.legend()
+    axes[1].plot(x, fZgX, '--', label='$l_{X|Z}(x|%.1f)$ likelihood' % z)
+    axes[1].set_xlabel('$x$')    
+    axes[1].legend()
     
 
 def likelihood_demo2():
     interact(likelihood_demo2_plot, a=(0.1, 1, 0.1), b=(0.1, 1, 0.1),
-             z=(-4, 4, 1), distV=distributions)
+             z=(0, 5, 0.2), distV=distributions)
