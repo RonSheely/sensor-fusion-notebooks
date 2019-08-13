@@ -18,7 +18,7 @@ def pdf(x, muX, sigmaX, distribution):
     raise ValueError('Unknown distribution %s' % distribution)
 
 def likelihood_demo2_plot(z=2, a=0.3, b=0.1,
-                          distV=distributions[0]):
+                          distV=distributions[0], condpdf=True):
 
     Nx = 801
     x = np.linspace(0.001, 5, Nx)
@@ -28,7 +28,7 @@ def likelihood_demo2_plot(z=2, a=0.3, b=0.1,
     
     fZgX = pdf(z - h, 0, sigmaV, distV)
 
-    fig, axes = subplots(2, figsize=(10, 5))
+    fig, axes = subplots(2 + condpdf * 1, figsize=(10, 5))    
     fig.tight_layout()    
 
     axes[0].plot(x, h, color='orange', label='$h(x) = x$')
@@ -38,10 +38,21 @@ def likelihood_demo2_plot(z=2, a=0.3, b=0.1,
     axes[0].set_ylabel('$z$')
     axes[0].legend()    
 
-    axes[1].plot(x, fZgX, '--', label='$l_{X|Z}(x|%.1f)$ likelihood' % z)
+    axes[1].plot(x, fZgX, '--', label='$l_{X|Z}(x|%.1f)$' % z)
     axes[1].set_xlabel('$x$')    
     axes[1].legend()
-    
+
+    if condpdf:
+        zv = np.linspace(0, 5, 201)
+        
+        X, Z = np.meshgrid(x, zv)
+        H = X
+        foo = pdf(Z - H, 0, sigmaV, distV)    
+        
+        axes[2].imshow(foo, origin='lower', extent=(x[0], x[-1], zv[0], zv[-1]))
+        axes[2].axis('tight')
+        axes[2].set_xlabel('$x$')
+        axes[2].set_ylabel('$z$')    
 
 def likelihood_demo2():
     interact(likelihood_demo2_plot, a=(0.1, 1, 0.1), b=(0.1, 1, 0.1),
