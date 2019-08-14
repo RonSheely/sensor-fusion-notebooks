@@ -2,8 +2,9 @@
 import numpy as np
 from matplotlib.pyplot import arrow
 from ipywidgets import interact, interactive, fixed
-from matplotlib.pyplot import figure, show, savefig, rcParams
+from matplotlib.pyplot import subplots
 from .lib.robot import robot_draw, Robot2
+from .lib.pose import Pose
 
 def odom_motion_model_demo1_plot(d=1, phi1=0, phi2=0, heading=90, steps=1):
 
@@ -22,8 +23,9 @@ def odom_motion_model_demo1_plot(d=1, phi1=0, phi2=0, heading=90, steps=1):
         theta[m] = robot.heading        
         robot.transition(d, phi1, phi2, dt=1)
 
-    fig = figure(figsize=(10, 5))
-    ax = fig.add_subplot(111)
+    fig, ax = subplots(figsize=(10, 5))
+    Pose(0, 0, 0).draw_axes(ax)
+    
     ax.set_xlim(-5, 5)
     ax.set_ylim(0, 5)
     ax.grid(True)

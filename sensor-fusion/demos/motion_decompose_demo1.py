@@ -2,8 +2,10 @@
 import numpy as np
 from matplotlib.pyplot import subplots, arrow
 from ipywidgets import interact, interactive, fixed
-from matplotlib.pyplot import figure, show, savefig, rcParams
+from matplotlib.pyplot import subplots
 from .lib.robot import robot_draw, Robot
+from .lib.pose import Pose
+
 
 def motion_model(pose0, v, omega, dt):
 
@@ -58,8 +60,9 @@ def motion_decompose_demo1_plot(x0=0, y0=0, theta0=0, v=2, omega=0):
 
     v, omega = speeds_decompose(pose1, pose0, 1.0)    
 
-    fig = figure(figsize=(5, 5))
-    ax = fig.add_subplot(111)
+    fig, ax = subplots(figsize=(10, 5))        
+    Pose(0, 0, 0).draw_axes(ax)
+    
     ax.axis('equal')
     ax.set_xlim(-2.5, 2.5)
     ax.set_ylim(-2.5, 2.5)

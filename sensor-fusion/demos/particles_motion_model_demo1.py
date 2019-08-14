@@ -2,9 +2,10 @@
 import numpy as np
 from matplotlib.pyplot import arrow
 from ipywidgets import interact, interactive, fixed
-from matplotlib.pyplot import figure, show, savefig, rcParams
+from matplotlib.pyplot import subplots
 from numpy.random import randn, uniform, seed
 from .lib.robot import robot_draw, Robot
+from .lib.pose import Pose
 
 def particles_motion_model_demo1_plot(Xmin=-1, Xmax=1,
                                       Ymin=0, Ymax=1, Tmin=90,
@@ -23,8 +24,9 @@ def particles_motion_model_demo1_plot(Xmin=-1, Xmax=1,
         robots.append(robot)
 
 
-    fig = figure(figsize=(10, 5))
-    ax = fig.add_subplot(111)
+    fig, ax = subplots(figsize=(10, 5))        
+    Pose(0, 0, 0).draw_axes(ax)        
+
     ax.set_xlim(-5, 5)
     ax.set_ylim(0, 5)
     ax.grid(True)
