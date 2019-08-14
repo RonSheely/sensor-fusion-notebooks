@@ -1,0 +1,13 @@
+BLUE
+
+KF fixed sigmaW, sigmaV, select prior distribution, select model (const speed, const accel)
+
+PF  enable resampling, # particles
+
+histogram filter, # bins
+
+EKF
+
+PF
+
+PF fjord
