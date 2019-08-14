@@ -5,7 +5,7 @@ from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import figure, show, savefig, rcParams
 from .lib.robot import robot_draw, Robot2
 
-def odom_motion_model_demo1_plot(d=1, phi1=0, phi2=0, heading=90, steps=10):
+def odom_motion_model_demo1_plot(d=1, phi1=0, phi2=0, heading=90, steps=1):
 
     x = np.zeros(steps + 1)
     y = np.zeros(steps + 1)

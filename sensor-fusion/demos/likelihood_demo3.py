@@ -4,7 +4,7 @@ from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import subplots
 from .lib.utils import gauss
 
-def likelihood_demo3_plot(sigmaV=0.2, z=2, show_condpdf=True):
+def likelihood_demo3_plot(sigmaV=0.2, z=2, show_Lambda=True):
 
     Nx = 801
     x = np.linspace(0, 5, Nx)
@@ -24,7 +24,7 @@ def likelihood_demo3_plot(sigmaV=0.2, z=2, show_condpdf=True):
     # invert values to achieve a monotonic function.
     x2 = np.interp(1 / z, 1 / h[m2], x[m2])
 
-    fig, axes = subplots(2 + show_condpdf * 1, figsize=(10, 5))
+    fig, axes = subplots(2 + show_Lambda * 1, figsize=(10, 5))
     fig.tight_layout()    
 
     axes[0].plot(x, h, color='orange', label='$h(x)$')
@@ -40,14 +40,14 @@ def likelihood_demo3_plot(sigmaV=0.2, z=2, show_condpdf=True):
     axes[1].set_xlabel('$x$')
     axes[1].legend()
 
-    if show_condpdf:
+    if show_Lambda:
         zv = np.linspace(0, 5, 201)
         
         X, Z = np.meshgrid(x, zv)
         H = (a * X) * (X <= d) + (a * d**2 / (X + 1e-6)) * (X > d)    
-        foo = gauss(Z - H, 0, sigmaV)    
+        Lambda = gauss(Z - H, 0, sigmaV)    
         
-        axes[2].imshow(foo, origin='lower', extent=(x[0], x[-1], zv[0], zv[-1]))
+        axes[2].imshow(Lambda, origin='lower', extent=(x[0], x[-1], zv[0], zv[-1]))
         axes[2].axis('tight')
         axes[2].set_xlabel('$x$')
         axes[2].set_ylabel('$z$')    
