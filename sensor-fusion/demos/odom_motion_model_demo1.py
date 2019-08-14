@@ -32,7 +32,8 @@ def odom_motion_model_demo1_plot(d=1, phi1=0, phi2=0, heading=90, steps=1):
     #ax.axis('equal')
 
     for m in range(len(x)):
-        robot_draw(ax, x[m], y[m], theta[m])
+        colour = ['red', 'orange', 'green', 'blue', 'magenta'][m % 5]
+        robot_draw(ax, x[m], y[m], theta[m], colour=colour)        
 
 def odom_motion_model_demo1():
     interact(odom_motion_model_demo1_plot, d=(0, 2, 0.1),

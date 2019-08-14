@@ -7,10 +7,10 @@ from numpy.random import randn, uniform, seed
 from .lib.robot import robot_draw, Robot
 from .lib.pose import Pose
 
-def particles_motion_model_demo1_plot(Xmin=-1, Xmax=1,
-                                      Ymin=0, Ymax=1, Tmin=90,
-                                      Tmax=90, Nparticles=10,
-                                      v=1, omega=0, steps=0):
+def particles_motion_model_demo1_plot(Xmin=-1, Xmax=1, Ymin=0, Ymax=1,
+                                      Tmin=90, Tmax=90, Nparticles=10,
+                                      v=1, omega=0, sigmaV=0,
+                                      sigmaOmega=0, steps=0):
 
     Tmin = np.radians(Tmin)
     Tmax = np.radians(Tmax)    
@@ -36,7 +36,10 @@ def particles_motion_model_demo1_plot(Xmin=-1, Xmax=1,
         
         for m, robot in enumerate(robots):
             robot_draw(ax, robot.x, robot.y, robot.heading, colour=colour)
-            robot.transition(v, omega, dt=1)
+            v1 = v + np.random.randn() * sigmaV
+            omega1 = omega + np.random.randn() * sigmaOmega
+            
+            robot.transition(v1, np.radians(omega1), dt=1)
     
 
 def particles_motion_model_demo1():
@@ -46,6 +49,7 @@ def particles_motion_model_demo1():
              Ymin=(-1, 1, 0.1), Ymax=(-1, 1, 0.1),
              Tmin=(-180, 180, 15), Tmax=(-180, 180, 15),
              Nparticles=(10, 100, 10),
+             sigmaV=(0, 1, 0.1), sigmaOmega=(0, 10, 1),
              steps=(0, 5),
              continuous_update=False)
     

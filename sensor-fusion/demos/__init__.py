@@ -1,6 +1,7 @@
 from .dead_reckoning_demo1 import *
 from .motion_model_demo1 import *
 from .particles_motion_model_demo1 import *
+from .particles_motion_model_demo2 import *
 from .odom_motion_model_demo1 import *
 from .motion_decompose_demo1 import *
 from .sonar1_raw_demo1 import *
