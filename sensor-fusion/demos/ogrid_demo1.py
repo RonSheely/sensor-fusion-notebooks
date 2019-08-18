@@ -23,6 +23,8 @@ beamwidth = 15
 
 def beam_draw(axes, pose, beamwidth, rmax=20):
 
+    # Ignore walls for now...
+    
     xmin, xmax = axes.get_xlim()
     ymin, ymax = axes.get_ylim()
 
@@ -39,27 +41,23 @@ def beam_draw(axes, pose, beamwidth, rmax=20):
     y1 = yr + np.sin(t1) * rmax
     y2 = yr + np.sin(t2) * rmax
 
-    #x1 = max(min(x1, xmax), xmin)
-    #x2 = max(min(x2, xmax), xmin)
-
-    #y1 = max(min(y1, ymax), ymin)
-    #y2 = max(min(y2, ymax), ymin)        
-
     axes.fill((xr, x1, x2), (yr, y1, y2), alpha=0.5)
     
 
 class Wall(object):
 
-    def __init__(self, path):
+    def __init__(self, v1, v2):
 
-        self.x = np.array(path)[:,0]
-        self.y = np.array(path)[:,1]
+        self.x = (v1[0], v2[0])
+        self.y = (v1[1], v2[1])
 
     def draw(self, axes):
 
         axes.plot(self.x, self.y, 'k')
 
-wall1 = Wall(((-1, 8), (0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (4, 7), (4, 6)))
+wall1 = Wall((-1, 8), (4, 8))
+wall2 = Wall((4, 8), (4, 6))
+walls = (wall1, wall2)
         
 
 def heatmap(ax, x, y, data, fmt='%.1f', skip=[], **kwargs):
@@ -122,7 +120,8 @@ def ogrid_demo1_plot(x=3, y=1, heading=90):
     ax.axis('equal')
     ogrid.draw(ax, ((robot.x, robot.y), ))
     robot.draw(ax)
-    wall1.draw(ax)
+    for wall in walls:
+        wall.draw(ax)
     beam_draw(ax, robot.pose, beamwidth)
 
 def ogrid_demo1():
