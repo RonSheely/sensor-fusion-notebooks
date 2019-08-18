@@ -1,9 +1,12 @@
+# Michael P. Hayes UCECE, Copyright 2018--2019
+
 from .dead_reckoning_demo1 import *
-from .motion_model_demo1 import *
+from .velocity_motion_model_demo1 import *
 from .particles_motion_model_demo1 import *
 from .particles_odom_motion_model_demo1 import *
 from .particles_motion_model_demo2 import *
 from .odom_motion_model_demo1 import *
+from .odom_motion_model_demo2 import *
 from .motion_decompose_demo1 import *
 from .sonar1_raw_demo1 import *
 from .sonar1_fit_demo1 import *

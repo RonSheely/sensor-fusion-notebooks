@@ -1,4 +1,4 @@
-# M. P. Hayes UCECE
+# Michael P. Hayes UCECE, Copyright 2018--2019
 import numpy as np
 from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import subplots

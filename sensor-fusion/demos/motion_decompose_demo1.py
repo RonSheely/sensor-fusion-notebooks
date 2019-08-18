@@ -1,4 +1,4 @@
-# M. P. Hayes UCECE
+# Michael P. Hayes UCECE, Copyright 2018--2019
 import numpy as np
 from matplotlib.pyplot import subplots, arrow
 from ipywidgets import interact, interactive, fixed
