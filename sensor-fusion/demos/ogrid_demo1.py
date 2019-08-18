@@ -55,13 +55,39 @@ class Line(object):
         y = Dy / D
         return x, y
 
+
+class LineSeg(Line):
+
+    def intersection(self, lineseg):
+        R = super(LineSeg, self).intersection(lineseg)
+        if not R:
+            return False
+        x, y = R
+
+        tx = (x - self.p1[0]) / (self.p2[0] - self.p1[0] + 1e-20)
+        ty = (y - self.p1[1]) / (self.p2[1] - self.p1[1] + 1e-20)
+        if tx > 1 or tx < 0:
+            return False
+        if ty > 1 or ty < 0:
+            return False
+
+        tx = (x - lineseg.p1[0]) / (lineseg.p2[0] - lineseg.p1[0] + 1e-20)
+        ty = (y - lineseg.p1[1]) / (lineseg.p2[1] - lineseg.p1[1] + 1e-20)
+        if tx > 1 or tx < 0:
+            return False
+        if ty > 1 or ty < 0:
+            return False        
+        
+        return R
+    
+
 class Sonar(object):
 
     def __init__(self, beamwidth, rmax=20):
         self.beamwidth = beamwidth
         self.rmax = rmax
 
-    def draw_beam(self, axes, pose, walls=None, **kwargs):
+    def draw_beam(self, axes, pose, walls=[], **kwargs):
         # Ignore walls for now...
     
         xmin, xmax = axes.get_xlim()
@@ -82,13 +108,24 @@ class Sonar(object):
             x = xr + np.cos(angle) * self.rmax
             y = yr + np.sin(angle) * self.rmax
 
+            lineseg = LineSeg((xr, yr), (x, y))
+
+            rmin = self.rmax
+            for wall in walls:
+                R = lineseg.intersection(wall.lineseg)
+                if R:
+                    xt, yt = R
+                    r = np.sqrt((xr - xt)**2 + (yr - yt)**2)
+                    if r < rmin:
+                        rmin = r
+
             t1 = angle - 0.5 * dangle
             t2 = angle + 0.5 * dangle
-
-            x1 = xr + np.cos(t1) * self.rmax
-            x2 = xr + np.cos(t2) * self.rmax
-            y1 = yr + np.sin(t1) * self.rmax
-            y2 = yr + np.sin(t2) * self.rmax
+                        
+            x1 = xr + np.cos(t1) * rmin
+            x2 = xr + np.cos(t2) * rmin
+            y1 = yr + np.sin(t1) * rmin
+            y2 = yr + np.sin(t2) * rmin
             
             axes.fill((xr, x1, x2), (yr, y1, y2),
                       alpha=kwargs.pop('alpha', 0.5),
@@ -99,6 +136,8 @@ class Wall(object):
 
     def __init__(self, p1, p2):
 
+        self.lineseg = LineSeg(p1, p2)
+        
         self.x = (p1[0], p2[0])
         self.y = (p1[1], p2[1])
 
@@ -155,13 +194,13 @@ class Ogrid(object):
         
 
     def draw(self, axes, skip=[]):
-
         heatmap(axes, self.x, self.y, self.grid, skip=skip)
 
+        
 ogrid = Ogrid(x, y)
 sonar = Sonar(np.radians(beamwidth))
         
-def ogrid_demo1_plot(x=3, y=1, heading=90):
+def ogrid_demo1_plot(x=3, y=1, heading=75):
 
     robot = Robot(x, y, heading=np.radians(heading))    
 
@@ -171,7 +210,7 @@ def ogrid_demo1_plot(x=3, y=1, heading=90):
     robot.draw(ax)
     for wall in walls:
         wall.draw(ax)
-    sonar.draw_beam(ax, robot.pose)
+    sonar.draw_beam(ax, robot.pose, walls=walls)
 
 def ogrid_demo1():
     interact(ogrid_demo1_plot,
