@@ -21,13 +21,47 @@ y = np.linspace(ymin, ymax, Ny)
 
 beamwidth = 15
 
+
+class Line(object):
+
+    def __init__(self, p1, p2):
+        self.p1 = p1
+        self.p2 = p2
+        
+    @property
+    def A(self):
+        return self.p1[1] - self.p2[1]
+    
+    @property
+    def B(self):        
+        return self.p2[0] - self.p1[0]
+    
+    @property
+    def C(self):
+        return self.p2[0] * self.p1[1] - self.p1[0] * self.p2[1]
+    
+    def intersection(self, line):
+        
+        if not isinstance(line, Line):
+            line = Line(*line)
+            
+        D  = self.A * line.B - self.B * line.A
+        Dx = self.C * line.B - self.B * line.C
+        Dy = self.A * line.C - self.C * line.A
+        
+        if D == 0:
+            return False
+        x = Dx / D
+        y = Dy / D
+        return x, y
+
 class Sonar(object):
 
     def __init__(self, beamwidth, rmax=20):
         self.beamwidth = beamwidth
         self.rmax = rmax
 
-    def draw_beam(self, axes, pose):
+    def draw_beam(self, axes, pose, walls=None, **kwargs):
         # Ignore walls for now...
     
         xmin, xmax = axes.get_xlim()
@@ -37,36 +71,29 @@ class Sonar(object):
         axes.set_ylim(ymin, ymax)        
         
         xr, yr, hr = pose
-        
-        t1 = hr - 0.5 * self.beamwidth
-        t2 = hr + 0.5 * self.beamwidth
-        
-        x1 = xr + np.cos(t1) * self.rmax
-        x2 = xr + np.cos(t2) * self.rmax
-        y1 = yr + np.sin(t1) * self.rmax
-        y2 = yr + np.sin(t2) * self.rmax
-        
-        axes.fill((xr, x1, x2), (yr, y1, y2), alpha=0.5)
-    
 
-def line(p1, p2):
+        dangle = np.radians(2.5)
+        Nrays = int(np.ceil(self.beamwidth / dangle))
+        angles = np.linspace(hr - 0.5 * (self.beamwidth - dangle),
+                             hr + 0.5 * (self.beamwidth - dangle), Nrays)
 
-    A = p1[1] - p2[1]
-    B = p2[0] - p1[0]
-    C = p1[0] * p2[1] - p2[0] * p1[1]
-    return A, B, -C
+        for angle in angles:
 
-def intersection(L1, L2):
+            x = xr + np.cos(angle) * self.rmax
+            y = yr + np.sin(angle) * self.rmax
 
-    D  = L1[0] * L2[1] - L1[1] * L2[0]
-    Dx = L1[2] * L2[1] - L1[1] * L2[2]
-    Dy = L1[0] * L2[2] - L1[2] * L2[0]
-    if D == 0:
-        return False
-    x = Dx / D
-    y = Dy / D
-    return x, y
+            t1 = angle - 0.5 * dangle
+            t2 = angle + 0.5 * dangle
 
+            x1 = xr + np.cos(t1) * self.rmax
+            x2 = xr + np.cos(t2) * self.rmax
+            y1 = yr + np.sin(t1) * self.rmax
+            y2 = yr + np.sin(t2) * self.rmax
+            
+            axes.fill((xr, x1, x2), (yr, y1, y2),
+                      alpha=kwargs.pop('alpha', 0.5),
+                      color=kwargs.pop('color', 'tab:blue'),
+                      **kwargs)
 
 class Wall(object):
 
