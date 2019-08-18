@@ -81,7 +81,7 @@ class LineSeg(Line):
         return R
     
 
-class Sonar(object):
+class Rangefinder(object):
 
     def __init__(self, beamwidth, rmax=20):
         self.beamwidth = beamwidth
@@ -214,7 +214,7 @@ class Ogrid(object):
 
         
 ogrid = Ogrid(x, y)
-sonar = Sonar(np.radians(beamwidth))
+rangefinder = Rangefinder(np.radians(beamwidth))
         
 def ogrid_demo1_plot(x=3, y=1, heading=75):
 
@@ -226,7 +226,7 @@ def ogrid_demo1_plot(x=3, y=1, heading=75):
     robot.draw(ax)
     for wall in walls:
         wall.draw(ax)
-    sonar.draw_beam(ax, robot.pose, walls=walls)
+    rangefinder.draw_beam(ax, robot.pose, walls=walls)
 
 def ogrid_demo1():
     interact(ogrid_demo1_plot,
