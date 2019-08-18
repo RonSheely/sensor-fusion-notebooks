@@ -21,35 +21,59 @@ y = np.linspace(ymin, ymax, Ny)
 
 beamwidth = 15
 
-def beam_draw(axes, pose, beamwidth, rmax=20):
+class Sonar(object):
 
-    # Ignore walls for now...
+    def __init__(self, beamwidth, rmax=20):
+        self.beamwidth = beamwidth
+        self.rmax = rmax
+
+    def draw_beam(self, axes, pose):
+        # Ignore walls for now...
     
-    xmin, xmax = axes.get_xlim()
-    ymin, ymax = axes.get_ylim()
-
-    axes.set_xlim(xmin, xmax)
-    axes.set_ylim(ymin, ymax)        
+        xmin, xmax = axes.get_xlim()
+        ymin, ymax = axes.get_ylim()
+        
+        axes.set_xlim(xmin, xmax)
+        axes.set_ylim(ymin, ymax)        
+        
+        xr, yr, hr = pose
+        
+        t1 = hr - 0.5 * self.beamwidth
+        t2 = hr + 0.5 * self.beamwidth
+        
+        x1 = xr + np.cos(t1) * self.rmax
+        x2 = xr + np.cos(t2) * self.rmax
+        y1 = yr + np.sin(t1) * self.rmax
+        y2 = yr + np.sin(t2) * self.rmax
+        
+        axes.fill((xr, x1, x2), (yr, y1, y2), alpha=0.5)
     
-    xr, yr, hr = pose
 
-    t1 = hr - 0.5 * np.radians(beamwidth)
-    t2 = hr + 0.5 * np.radians(beamwidth)
+def line(p1, p2):
 
-    x1 = xr + np.cos(t1) * rmax
-    x2 = xr + np.cos(t2) * rmax
-    y1 = yr + np.sin(t1) * rmax
-    y2 = yr + np.sin(t2) * rmax
+    A = p1[1] - p2[1]
+    B = p2[0] - p1[0]
+    C = p1[0] * p2[1] - p2[0] * p1[1]
+    return A, B, -C
 
-    axes.fill((xr, x1, x2), (yr, y1, y2), alpha=0.5)
-    
+def intersection(L1, L2):
+
+    D  = L1[0] * L2[1] - L1[1] * L2[0]
+    Dx = L1[2] * L2[1] - L1[1] * L2[2]
+    Dy = L1[0] * L2[2] - L1[2] * L2[0]
+    if D == 0:
+        return False
+    x = Dx / D
+    y = Dy / D
+    return x, y
+
 
 class Wall(object):
 
-    def __init__(self, v1, v2):
+    def __init__(self, p1, p2):
 
-        self.x = (v1[0], v2[0])
-        self.y = (v1[1], v2[1])
+        self.x = (p1[0], p2[0])
+        self.y = (p1[1], p2[1])
 
     def draw(self, axes):
 
@@ -108,9 +132,7 @@ class Ogrid(object):
         heatmap(axes, self.x, self.y, self.grid, skip=skip)
 
 ogrid = Ogrid(x, y)
-
-
-
+sonar = Sonar(np.radians(beamwidth))
         
 def ogrid_demo1_plot(x=3, y=1, heading=90):
 
@@ -122,7 +144,7 @@ def ogrid_demo1_plot(x=3, y=1, heading=90):
     robot.draw(ax)
     for wall in walls:
         wall.draw(ax)
-    beam_draw(ax, robot.pose, beamwidth)
+    sonar.draw_beam(ax, robot.pose)
 
 def ogrid_demo1():
     interact(ogrid_demo1_plot,
