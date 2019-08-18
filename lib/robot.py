@@ -3,6 +3,7 @@
 import numpy as np
 from matplotlib.pyplot import arrow, Circle, Arrow
 from .utils import wraptopi
+from .pose import Pose
 
 def robot_draw(ax, x, y, theta, d=0.25, colour='blue', linestyle='-'):
 
@@ -26,7 +27,7 @@ class Robot(object):
 
     @property
     def pose(self):
-        return self.x, self.y, self.heading
+        return Pose(self.x, self.y, self.heading)
         
     def transition(self, v, omega, dt=0.1):
 

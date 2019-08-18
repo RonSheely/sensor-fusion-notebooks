@@ -81,17 +81,23 @@ class LineSeg(Line):
         return R
     
 
+class Scan(object):
+
+    def __init__(self, angles, ranges, rmax):
+        self.angles = angles
+        self.ranges = ranges
+        self.rmax = rmax
+
+        
 class Rangefinder(object):
 
     def __init__(self, beamwidth, rmax=20):
         self.beamwidth = beamwidth
         self.rmax = rmax
 
-    def scan(self, pose, walls, dangle):
-        
-        dangle = np.radians(dangle)
+    def scan(self, pose, walls, dangle=np.radians(1)):
 
-        xr, yr, hr = pose
+        xr, yr, hr = pose.x, pose.y, pose.theta
 
         Nrays = int(np.ceil(self.beamwidth / dangle))
         angles = np.linspace(hr - 0.5 * (self.beamwidth - dangle),
@@ -116,7 +122,7 @@ class Rangefinder(object):
                         rmin = r
             ranges[m] = rmin
 
-        return angles, ranges
+        return Scan(angles, ranges, self.rmax)
         
         
     def draw_beam(self, axes, pose, walls=[], **kwargs):
@@ -127,13 +133,13 @@ class Rangefinder(object):
         
         axes.set_xlim(xmin, xmax)
         axes.set_ylim(ymin, ymax)        
-        
-        xr, yr, hr = pose
+
+        xr, yr, hr = pose.x, pose.y, pose.theta        
 
         dangle = np.radians(1)
-        angles, ranges = self.scan(pose, walls, dangle)
+        scan = self.scan(pose, walls, dangle)
 
-        for angle, r in zip(angles, ranges):
+        for angle, r in zip(scan.angles, scan.ranges):
         
             t1 = angle - 0.5 * dangle
             t2 = angle + 0.5 * dangle
@@ -148,6 +154,33 @@ class Rangefinder(object):
                       color=kwargs.pop('color', 'tab:blue'),
                       **kwargs)
 
+class Occfind(object):
+
+    def __init__(self, pose, scan):
+        self.pose = pose
+        self.scan = scan
+
+    def hits(self):
+
+        hits = {}
+
+        for angle, r in zip(self.scan.angles, self.scan.ranges):
+
+            if r >= self.scan.rmax:
+                continue
+            xt = self.pose.x + r * np.cos(angle)
+            yt = self.pose.y + r * np.sin(angle)
+
+            xc = int(xt + 0.5)
+            yc = int(yt + 0.5)
+            hit = (xc, yc)
+
+            if hit not in hits:
+                hits[hit] = 0
+            hits[hit] += 1
+        return hits
+        
+            
 class Wall(object):
 
     def __init__(self, p1, p2):
@@ -215,6 +248,7 @@ class Ogrid(object):
         
 ogrid = Ogrid(x, y)
 rangefinder = Rangefinder(np.radians(beamwidth))
+
         
 def ogrid_demo1_plot(x=3, y=1, heading=75):
 
@@ -228,6 +262,11 @@ def ogrid_demo1_plot(x=3, y=1, heading=75):
         wall.draw(ax)
     rangefinder.draw_beam(ax, robot.pose, walls=walls)
 
+    scan = rangefinder.scan(robot.pose, walls)
+    hits = Occfind(robot.pose, scan).hits()
+    print(hits)
+    
+    
 def ogrid_demo1():
     interact(ogrid_demo1_plot,
              x=(xmin, xmax, 1),
