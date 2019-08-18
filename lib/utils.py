@@ -1,3 +1,5 @@
+# Michael P. Hayes UCECE, Copyright 2018--2019
+
 import numpy as np
 
 def rect(t):

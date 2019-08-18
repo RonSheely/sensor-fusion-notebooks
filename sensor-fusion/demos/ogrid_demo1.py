@@ -6,25 +6,61 @@ from matplotlib.pyplot import subplots
 from .lib.robot import robot_draw, Robot
 from .lib.pose import Pose
 
-xmin = -5
-xmax = 5
+xmin = -10
+xmax = 10
 ymin = 0
 ymax = 10
 tmin = -180
 tmax = 180
 
-Nx = 11
+Nx = 21
 Ny = 11
 
 x = np.linspace(xmin, xmax, Nx)
 y = np.linspace(ymin, ymax, Ny)
 
-
-wall1 = ((-1, 5), (0, 5), (1, 5), (1, 4), (1, 3))
-walls = (wall1, 1)
-
 beamwidth = 15
 
+def beam_draw(axes, pose, beamwidth, rmax=20):
+
+    xmin, xmax = axes.get_xlim()
+    ymin, ymax = axes.get_ylim()
+
+    axes.set_xlim(xmin, xmax)
+    axes.set_ylim(ymin, ymax)        
+    
+    xr, yr, hr = pose
+
+    t1 = hr - 0.5 * np.radians(beamwidth)
+    t2 = hr + 0.5 * np.radians(beamwidth)
+
+    x1 = xr + np.cos(t1) * rmax
+    x2 = xr + np.cos(t2) * rmax
+    y1 = yr + np.sin(t1) * rmax
+    y2 = yr + np.sin(t2) * rmax
+
+    #x1 = max(min(x1, xmax), xmin)
+    #x2 = max(min(x2, xmax), xmin)
+
+    #y1 = max(min(y1, ymax), ymin)
+    #y2 = max(min(y2, ymax), ymin)        
+
+    axes.fill((xr, x1, x2), (yr, y1, y2), alpha=0.5)
+    
+
+class Wall(object):
+
+    def __init__(self, path):
+
+        self.x = np.array(path)[:,0]
+        self.y = np.array(path)[:,1]
+
+    def draw(self, axes):
+
+        axes.plot(self.x, self.y, 'k')
+
+wall1 = Wall(((-1, 8), (0, 8), (1, 8), (2, 8), (3, 8), (4, 8), (4, 7), (4, 6)))
+        
 
 def heatmap(ax, x, y, data, fmt='%.1f', skip=[], **kwargs):
 
@@ -66,7 +102,7 @@ class Ogrid(object):
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.grid = np.ones((Nx, Ny)) * 0.5
+        self.grid = np.ones((Ny, Nx)) * 0.5
         
 
     def draw(self, axes, skip=[]):
@@ -75,16 +111,19 @@ class Ogrid(object):
 
 ogrid = Ogrid(x, y)
 
+
+
         
 def ogrid_demo1_plot(x=3, y=1, heading=90):
 
     robot = Robot(x, y, heading=np.radians(heading))    
 
     fig, ax = subplots(figsize=(10, 5))
-    ax.axis('tight')
+    ax.axis('equal')
     ogrid.draw(ax, ((robot.x, robot.y), ))
     robot.draw(ax)
-    
+    wall1.draw(ax)
+    beam_draw(ax, robot.pose, beamwidth)
 
 def ogrid_demo1():
     interact(ogrid_demo1_plot,

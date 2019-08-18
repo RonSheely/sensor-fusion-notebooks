@@ -1,4 +1,5 @@
-# M. P. Hayes UCECE
+# Michael P. Hayes UCECE, Copyright 2018--2019
+
 from matplotlib.pyplot import subplots, setp
 import numpy as np
 

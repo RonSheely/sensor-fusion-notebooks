@@ -1,3 +1,5 @@
+# Michael P. Hayes UCECE, Copyright 2018--2019
+
 from numpy import zeros_like, ones_like, exp, sqrt, pi, average, trapz
 
 class KDE(object):
