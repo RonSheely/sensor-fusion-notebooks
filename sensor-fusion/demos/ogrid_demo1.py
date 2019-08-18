@@ -87,23 +87,19 @@ class Sonar(object):
         self.beamwidth = beamwidth
         self.rmax = rmax
 
-    def draw_beam(self, axes, pose, walls=[], **kwargs):
-        # Ignore walls for now...
-    
-        xmin, xmax = axes.get_xlim()
-        ymin, ymax = axes.get_ylim()
+    def scan(self, pose, walls, dangle):
         
-        axes.set_xlim(xmin, xmax)
-        axes.set_ylim(ymin, ymax)        
-        
+        dangle = np.radians(dangle)
+
         xr, yr, hr = pose
 
-        dangle = np.radians(2.5)
         Nrays = int(np.ceil(self.beamwidth / dangle))
         angles = np.linspace(hr - 0.5 * (self.beamwidth - dangle),
                              hr + 0.5 * (self.beamwidth - dangle), Nrays)
 
-        for angle in angles:
+        ranges = angles * 0
+        
+        for m, angle in enumerate(angles):
 
             x = xr + np.cos(angle) * self.rmax
             y = yr + np.sin(angle) * self.rmax
@@ -118,14 +114,34 @@ class Sonar(object):
                     r = np.sqrt((xr - xt)**2 + (yr - yt)**2)
                     if r < rmin:
                         rmin = r
+            ranges[m] = rmin
 
+        return angles, ranges
+        
+        
+    def draw_beam(self, axes, pose, walls=[], **kwargs):
+        # Ignore walls for now...
+    
+        xmin, xmax = axes.get_xlim()
+        ymin, ymax = axes.get_ylim()
+        
+        axes.set_xlim(xmin, xmax)
+        axes.set_ylim(ymin, ymax)        
+        
+        xr, yr, hr = pose
+
+        dangle = np.radians(1)
+        angles, ranges = self.scan(pose, walls, dangle)
+
+        for angle, r in zip(angles, ranges):
+        
             t1 = angle - 0.5 * dangle
             t2 = angle + 0.5 * dangle
                         
-            x1 = xr + np.cos(t1) * rmin
-            x2 = xr + np.cos(t2) * rmin
-            y1 = yr + np.sin(t1) * rmin
-            y2 = yr + np.sin(t2) * rmin
+            x1 = xr + np.cos(t1) * r
+            x2 = xr + np.cos(t2) * r
+            y1 = yr + np.sin(t1) * r
+            y2 = yr + np.sin(t2) * r
             
             axes.fill((xr, x1, x2), (yr, y1, y2),
                       alpha=kwargs.pop('alpha', 0.5),
