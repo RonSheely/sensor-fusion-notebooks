@@ -260,7 +260,7 @@ def heatmap(ax, x, y, data, fmt='%.1f', skip=[], **kwargs):
     
     c = ax.pcolor(xc, yc, data, linewidths=4, vmin=0.0, vmax=1.0,
                   edgecolors=kwargs.pop('edgecolors', 'w'),
-                  cmap=kwargs.pop('cmap', 'RdBu'),
+                  cmap=kwargs.pop('cmap', 'Purples'),
                   **kwargs)
 
     c.update_scalarmappable()
