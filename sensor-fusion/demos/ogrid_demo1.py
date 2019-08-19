@@ -165,14 +165,24 @@ class Wall(object):
 
     def __init__(self, p1, p2):
 
-        self.lineseg = LineSeg(p1, p2)
+        x1, y1 = p1
+        x2, y2 = p1        
         
-        self.x = (p1[0], p2[0])
-        self.y = (p1[1], p2[1])
+        self.x = (x1, x2)
+        self.y = (y1, y2)
+
+        d = 0.5
+        pa = x1 - d, y1 - d
+        pb = x1 - d, y2 + d        
+        pc = x2 + d, y2 + d
+        pd = x2 + d, y1 - d        
+        self.linesegs = (LineSeg(pa, pb), LineSeg(pb. pc),
+                         LineSeg(pc, pd), LineSeg(pd, pa))
 
     def draw(self, axes):
 
-        axes.plot(self.x, self.y, 'k')
+        for lineseg in self.linesegs:
+            axes.plot(lineseg.p1, lineseg.p2, 'k')
 
 wall1 = Wall((-1, 8), (4, 8))
 wall2 = Wall((4, 8), (4, 6))
