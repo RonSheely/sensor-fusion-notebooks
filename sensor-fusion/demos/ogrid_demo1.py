@@ -21,7 +21,6 @@ y = np.linspace(ymin, ymax, Ny)
 
 beamwidth = 15
 
-
 class Line(object):
 
     def __init__(self, p1, p2):
@@ -55,7 +54,13 @@ class Line(object):
         y = Dy / D
         return x, y
 
+    def coord(self, t):
 
+        x = self.p1[0] + t * (self.p2[0] - self.p1[0])
+        y = self.p1[1] + t * (self.p2[1] - self.p1[1])
+        return x, y
+
+    
 class LineSeg(Line):
 
     def intersection(self, lineseg):
@@ -79,6 +84,12 @@ class LineSeg(Line):
             return False        
         
         return R
+
+    @property
+    def length(self):
+
+        return np.sqrt((self.p2[0] - self.p1[0])**2 +
+                       (self.p2[1] - self.p1[1])**2)
     
 
 class Scan(object):
@@ -179,7 +190,46 @@ class Occfind(object):
                 hits[hit] = 0
             hits[hit] += 1
         return hits
-        
+
+    def visits(self):
+
+        dr = 0.1
+        visits = {}
+
+        for angle, r in zip(self.scan.angles, self.scan.ranges):
+
+            xt = self.pose.x + r * np.cos(angle)
+            yt = self.pose.y + r * np.sin(angle)
+
+            lineseg = LineSeg((self.pose.x, self.pose.y),
+                              (xt, yt))
+
+            length = lineseg.length
+            steps = int(length / dr + 0.5)
+            t = np.linspace(0, 1, steps)
+
+            for t1 in t:
+                xt, yt = lineseg.coord(t1)
+                xc = int(xt + 0.5)
+                yc = int(yt + 0.5)
+                visit = (xc, yc)
+
+                if visit not in visits:
+                    visits[visit] = 0
+                visits[visit] += 1
+        return visits    
+
+    def hits_misses(self):
+
+        hits = self.hits()
+        visits = self.visits()
+
+        misses = {}
+        for visit in visits:
+            if visit not in hits:
+                misses[visit] = visits[visit]
+        return hits, misses
+    
             
 class Wall(object):
 
@@ -239,12 +289,29 @@ class Ogrid(object):
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.grid = np.ones((Ny, Nx)) * 0.5
+        # Log odds
+        self.grid = np.zeros((Ny, Nx))
         
-
     def draw(self, axes, skip=[]):
-        heatmap(axes, self.x, self.y, self.grid, skip=skip)
+        # Convert log odds to probability
+        P = 1 - 1 / (1 + np.exp(self.grid))
+        heatmap(axes, self.x, self.y, P, skip=skip)
 
+    def update(self, cells, P1, P2):
+
+        lam = np.log(P1 / P2)
+        for cell in cells:
+            # Weed out marginal cells.
+            if cells[cell] < 5:
+                continue
+
+            try:
+                m = np.argwhere(self.x == cell[0])[0][0]
+                n = np.argwhere(self.y == cell[1])[0][0]            
+                self.grid[n, m] += lam
+            except:
+                pass
+                
         
 ogrid = Ogrid(x, y)
 rangefinder = Rangefinder(np.radians(beamwidth))
@@ -254,6 +321,13 @@ def ogrid_demo1_plot(x=3, y=1, heading=75):
 
     robot = Robot(x, y, heading=np.radians(heading))    
 
+    scan = rangefinder.scan(robot.pose, walls)
+    hits, misses = Occfind(robot.pose, scan).hits_misses()
+
+    ogrid.update({(robot.x, robot.y): 100}, 0.001, 1)
+    ogrid.update(hits, 0.06, 0.005)
+    ogrid.update(misses, 0.2, 0.9)    
+    
     fig, ax = subplots(figsize=(10, 5))
     ax.axis('equal')
     ogrid.draw(ax, ((robot.x, robot.y), ))
@@ -262,10 +336,6 @@ def ogrid_demo1_plot(x=3, y=1, heading=75):
         wall.draw(ax)
     rangefinder.draw_beam(ax, robot.pose, walls=walls)
 
-    scan = rangefinder.scan(robot.pose, walls)
-    hits = Occfind(robot.pose, scan).hits()
-    print(hits)
-    
     
 def ogrid_demo1():
     interact(ogrid_demo1_plot,
