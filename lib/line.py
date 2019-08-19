@@ -72,3 +72,6 @@ class LineSeg(Line):
         return np.sqrt((self.p1[0] - self.p0[0])**2 +
                        (self.p1[1] - self.p0[1])**2)
     
+    def __str__(self):
+        return "(%f, %f) -> (%f, %f)" % (self.p0[0], self.p0[1],
+                                         self.p1[0], self.p1[1])

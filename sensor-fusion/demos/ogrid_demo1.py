@@ -52,19 +52,20 @@ class Rangefinder(object):
             y = yr + np.sin(angle) * self.rmax
 
             raylineseg = LineSeg((xr, yr), (x, y))
-
+            
             rmin = self.rmax
+            blockhit = None
             for wall in walls:
-                R, r = wall.intersection(raylineseg)
-                if r < rmin:
-                    rmin = r
+                R, r1, block = wall.intersection(raylineseg)
+                if R and r1 < rmin:
+                    rmin = r1
+                    blockhit = block
+
             ranges[m] = rmin
 
         return Scan(angles, ranges, self.rmax)
         
-        
-    def draw_beam(self, axes, pose, walls=[], **kwargs):
-        # Ignore walls for now...
+    def draw_scan(self, axes, pose, scan, **kwargs):
     
         xmin, xmax = axes.get_xlim()
         ymin, ymax = axes.get_ylim()
@@ -72,10 +73,9 @@ class Rangefinder(object):
         axes.set_xlim(xmin, xmax)
         axes.set_ylim(ymin, ymax)        
 
-        xr, yr, hr = pose.x, pose.y, pose.theta        
+        xr, yr = pose.x, pose.y
 
         dangle = np.radians(1)
-        scan = self.scan(pose, walls, dangle)
 
         for angle, r in zip(scan.angles, scan.ranges):
         
@@ -94,24 +94,40 @@ class Rangefinder(object):
 
 class Occfind(object):
 
-    def __init__(self, pose, scan):
+    def __init__(self, pose, scan, walls):
         self.pose = pose
         self.scan = scan
+        self.walls = walls
 
     def hits(self):
 
         hits = {}
 
+        xr, yr = self.pose.x, self.pose.y
+        
         for angle, r in zip(self.scan.angles, self.scan.ranges):
 
             if r >= self.scan.rmax:
                 continue
-            xt = self.pose.x + r * np.cos(angle)
-            yt = self.pose.y + r * np.sin(angle)
 
-            xc = int(np.round(xt))
-            yc = int(np.round(yt))
-            hit = (xc, yc)
+            xt = xr + r * np.cos(angle)
+            yt = yr + r * np.sin(angle)
+
+            raylineseg = LineSeg((xr, yr), (xt, yt))
+
+            blockhit = None
+            rmin = self.scan.rmax
+            
+            for wall in self.walls:
+                R, r1, block = wall.intersection(raylineseg)
+                if R and r1 < rmin:
+                    rmin = r1
+                    blockhit = block
+
+            if blockhit is None:
+                continue
+                    
+            hit = blockhit.x, blockhit.y
 
             if hit not in hits:
                 hits[hit] = 0
@@ -128,8 +144,7 @@ class Occfind(object):
             xt = self.pose.x + r * np.cos(angle)
             yt = self.pose.y + r * np.sin(angle)
 
-            lineseg = LineSeg((self.pose.x, self.pose.y),
-                              (xt, yt))
+            lineseg = LineSeg((self.pose.x, self.pose.y), (xt, yt))
 
             length = lineseg.length
             steps = int(length / dr + 0.5)
@@ -156,32 +171,53 @@ class Occfind(object):
             if visit not in hits:
                 misses[visit] = visits[visit]
         return hits, misses
-    
+
+
+class Block(object):
+
+    def __init__(self, x, y, d=0.5):
+
+        self.x, self.y = x, y
+        
+        pa = x - d, y - d
+        pb = x - d, y + d        
+        pc = x + d, y + d
+        pd = x + d, y - d                
+        
+        self.linesegs = (LineSeg(pa, pb), LineSeg(pb, pc),
+                         LineSeg(pc, pd), LineSeg(pd, pa))
+
+    def __str__(self):
+        return "%d, %d" % (self.x, self.y)
+        
             
 class Wall(object):
 
-    def __init__(self, p0, p1, d=0.4):
+    def __init__(self, p0, p1, d=0.5):
 
         self.p0 = p0
         self.p1 = p1
+        self.d = d
         
         x0, y0 = p0
         x1, y1 = p1
 
-        # FIXME.  This assumes x1 >= x0 and y1 >= y0
-        pa = x0 - d, y0 - d
-        pb = x0 - d, y1 + d        
-        pc = x1 + d, y1 + d
-        pd = x1 + d, y0 - d        
-        self.linesegs = (LineSeg(pa, pb), LineSeg(pb, pc),
-                         LineSeg(pc, pd), LineSeg(pd, pa))
+        self.blocks = []
+        if x0 == x1:
+            # Vertical
+            for y in np.arange(y0, y1 + 1):
+                self.blocks.append(Block(x0, y, d))
+        elif y0 == y1:
+            # Horizontal
+            for x in np.arange(x0, x1 + 1):
+                self.blocks.append(Block(x, y0, d))
 
     def draw(self, axes):
 
         x0, y0 = self.p0
         x1, y1 = self.p1
 
-        d = 0.5
+        d = self.d
         
         x = [x0 - d, x0 - d, x1 + d, x1 + d, x0 - d]
         y = [y0 - d, y1 + d, y1 + d, y0 - d, y0 - d]
@@ -191,22 +227,28 @@ class Wall(object):
 
         xr, yr = ray.p0
         rmin = 1000
+        blockhit = None
+        hit = False
 
-        # Check all four wals and return closest hit if any
-        for lineseg in self.linesegs:
-            R = ray.intersection(lineseg)
-            if R:
-                xt, yt = R
-                r = np.sqrt((xr - xt)**2 + (yr - yt)**2)
-                if r < rmin:
-                    rmin = r
-        return R, rmin
+        # Check all four walls and return closest hit if any
+        for block in self.blocks:
+            for lineseg in block.linesegs:
+                R = ray.intersection(lineseg)
+                if R:
+                    xt, yt = R
+                    r = np.sqrt((xt - xr)**2 + (yt - yr)**2)
+                    if r < rmin:
+                        rmin = r
+                        hit = R
+                        blockhit = block
+
+        return hit, rmin, blockhit
             
 wall1 = Wall((-1, 8), (3, 8))
 wall2 = Wall((4, 5), (4, 7))
 wall3 = Wall((-7, 2), (-7, 7))
 walls = (wall1, wall2, wall3)
-        
+
 
 def heatmap(ax, x, y, data, fmt='%.1f', skip=[], **kwargs):
 
@@ -281,7 +323,7 @@ def ogrid_demo1_plot(x=3, y=1, heading=75):
     robot = Robot(x, y, heading=np.radians(heading))    
 
     scan = rangefinder.scan(robot.pose, walls)
-    hits, misses = Occfind(robot.pose, scan).hits_misses()
+    hits, misses = Occfind(robot.pose, scan, walls).hits_misses()
 
     ogrid.update({(robot.x, robot.y): 100}, 0.001, 1)
     ogrid.update(hits, 0.06, 0.005)
@@ -293,7 +335,7 @@ def ogrid_demo1_plot(x=3, y=1, heading=75):
     robot.draw(ax, d=0.55)
     for wall in walls:
         wall.draw(ax)
-    rangefinder.draw_beam(ax, robot.pose, walls=walls)
+    rangefinder.draw_scan(ax, robot.pose, scan)
 
     
 def ogrid_demo1():
