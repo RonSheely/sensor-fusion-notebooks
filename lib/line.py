@@ -4,21 +4,21 @@ import numpy as np
 
 class Line(object):
 
-    def __init__(self, p1, p2):
+    def __init__(self, p0, p1):
+        self.p0 = p0
         self.p1 = p1
-        self.p2 = p2
         
     @property
     def A(self):
-        return self.p1[1] - self.p2[1]
+        return self.p0[1] - self.p1[1]
     
     @property
     def B(self):        
-        return self.p2[0] - self.p1[0]
+        return self.p1[0] - self.p0[0]
     
     @property
     def C(self):
-        return self.p2[0] * self.p1[1] - self.p1[0] * self.p2[1]
+        return self.p1[0] * self.p0[1] - self.p0[0] * self.p1[1]
     
     def intersection(self, line):
         
@@ -37,8 +37,8 @@ class Line(object):
 
     def coord(self, t):
 
-        x = self.p1[0] + t * (self.p2[0] - self.p1[0])
-        y = self.p1[1] + t * (self.p2[1] - self.p1[1])
+        x = self.p0[0] + t * (self.p1[0] - self.p0[0])
+        y = self.p0[1] + t * (self.p1[1] - self.p0[1])
         return x, y
 
     
@@ -50,17 +50,17 @@ class LineSeg(Line):
             return False
         x, y = R
 
-        if self.p2[0] != self.p1[0]:
-            t = (x - self.p1[0]) / (self.p2[0] - self.p1[0])
+        if self.p1[0] != self.p0[0]:
+            t = (x - self.p0[0]) / (self.p1[0] - self.p0[0])
         else:
-            t = (y - self.p1[1]) / (self.p2[1] - self.p1[1])            
+            t = (y - self.p0[1]) / (self.p1[1] - self.p0[1])            
         if t > 1 or t < 0:
             return False
 
-        if lineseg.p2[0] != lineseg.p1[0]:
-            t = (x - lineseg.p1[0]) / (lineseg.p2[0] - lineseg.p1[0])
+        if lineseg.p1[0] != lineseg.p0[0]:
+            t = (x - lineseg.p0[0]) / (lineseg.p1[0] - lineseg.p0[0])
         else:
-            t = (y - lineseg.p1[1]) / (lineseg.p2[1] - lineseg.p1[1])
+            t = (y - lineseg.p0[1]) / (lineseg.p1[1] - lineseg.p0[1])
         if t > 1 or t < 0:
             return False
         
@@ -69,6 +69,6 @@ class LineSeg(Line):
     @property
     def length(self):
 
-        return np.sqrt((self.p2[0] - self.p1[0])**2 +
-                       (self.p2[1] - self.p1[1])**2)
+        return np.sqrt((self.p1[0] - self.p0[0])**2 +
+                       (self.p1[1] - self.p0[1])**2)
     

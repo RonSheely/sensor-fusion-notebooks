@@ -51,16 +51,13 @@ class Rangefinder(object):
             x = xr + np.cos(angle) * self.rmax
             y = yr + np.sin(angle) * self.rmax
 
-            lineseg = LineSeg((xr, yr), (x, y))
+            raylineseg = LineSeg((xr, yr), (x, y))
 
             rmin = self.rmax
             for wall in walls:
-                R = lineseg.intersection(wall.lineseg)
-                if R:
-                    xt, yt = R
-                    r = np.sqrt((xr - xt)**2 + (yr - yt)**2)
-                    if r < rmin:
-                        rmin = r
+                R, r = wall.intersection(raylineseg)
+                if r < rmin:
+                    rmin = r
             ranges[m] = rmin
 
         return Scan(angles, ranges, self.rmax)
@@ -163,29 +160,50 @@ class Occfind(object):
             
 class Wall(object):
 
-    def __init__(self, p1, p2):
+    def __init__(self, p0, p1, d=0.4):
 
-        x1, y1 = p1
-        x2, y2 = p1        
+        self.p0 = p0
+        self.p1 = p1
         
-        self.x = (x1, x2)
-        self.y = (y1, y2)
+        x0, y0 = p0
+        x1, y1 = p1
 
-        d = 0.5
-        pa = x1 - d, y1 - d
-        pb = x1 - d, y2 + d        
-        pc = x2 + d, y2 + d
-        pd = x2 + d, y1 - d        
-        self.linesegs = (LineSeg(pa, pb), LineSeg(pb. pc),
+        # FIXME.  This assumes x1 >= x0 and y1 >= y0
+        pa = x0 - d, y0 - d
+        pb = x0 - d, y1 + d        
+        pc = x1 + d, y1 + d
+        pd = x1 + d, y0 - d        
+        self.linesegs = (LineSeg(pa, pb), LineSeg(pb, pc),
                          LineSeg(pc, pd), LineSeg(pd, pa))
 
     def draw(self, axes):
 
-        for lineseg in self.linesegs:
-            axes.plot(lineseg.p1, lineseg.p2, 'k')
+        x0, y0 = self.p0
+        x1, y1 = self.p1
 
-wall1 = Wall((-1, 8), (4, 8))
-wall2 = Wall((4, 8), (4, 6))
+        d = 0.5
+        
+        x = [x0 - d, x0 - d, x1 + d, x1 + d, x0 - d]
+        y = [y0 - d, y1 + d, y1 + d, y0 - d, y0 - d]
+        axes.plot(x, y, 'k')
+
+    def intersection(self, ray):
+
+        xr, yr = ray.p0
+        rmin = 1000
+
+        # Check all four wals and return closest hit if any
+        for lineseg in self.linesegs:
+            R = ray.intersection(lineseg)
+            if R:
+                xt, yt = R
+                r = np.sqrt((xr - xt)**2 + (yr - yt)**2)
+                if r < rmin:
+                    rmin = r
+        return R, rmin
+            
+wall1 = Wall((-1, 8), (3, 8))
+wall2 = Wall((4, 5), (4, 7))
 wall3 = Wall((-7, 2), (-7, 7))
 walls = (wall1, wall2, wall3)
         
