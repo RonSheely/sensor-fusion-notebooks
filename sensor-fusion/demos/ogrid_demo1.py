@@ -262,7 +262,7 @@ def ogrid_demo1_plot(x=3, y=1, heading=75):
     fig, ax = subplots(figsize=(10, 5))
     ax.axis('equal')
     ogrid.draw(ax, ((robot.x, robot.y), ))
-    robot.draw(ax)
+    robot.draw(ax, d=0.55)
     for wall in walls:
         wall.draw(ax)
     rangefinder.draw_beam(ax, robot.pose, walls=walls)

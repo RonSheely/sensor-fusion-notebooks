@@ -5,16 +5,18 @@ from matplotlib.pyplot import arrow, Circle, Arrow
 from .utils import wraptopi
 from .pose import Pose
 
-def robot_draw(ax, x, y, theta, d=0.25, colour='blue', linestyle='-'):
+def robot_draw(ax, x, y, theta, d=0.25, **kwargs):
 
     dx = d * np.cos(theta)
     dy = d * np.sin(theta)
 
     opt = {'head_width': 0.15, 'head_length': 0.15, 'width': 0.05,
            'length_includes_head': True}
-    circle = Circle((x, y), d, color=colour, fill=False, linestyle=linestyle)
+
+    color = kwargs.pop('color', 'blue')    
+    circle = Circle((x, y), d, fill=False, color=color, **kwargs)
     ax.add_artist(circle)
-    ax.arrow(x, y, dx, dy, **opt, color=colour)        
+    ax.arrow(x, y, dx, dy, **opt, color=color)        
 
 
 class Robot(object):
@@ -43,9 +45,9 @@ class Robot(object):
             self.y += v / omega * cos(hp) - v / omega * cos(hp + omega * dt)
             self.heading = wraptopi(hp + omega * dt)
 
-    def draw(self, ax, colour='blue', linestyle='-'):
-        robot_draw(ax, self.x, self.y, self.heading,
-                   colour=colour, linestyle=linestyle)
+    def draw(self, ax, d=0.5, **kwargs):
+        robot_draw(ax, self.x, self.y, self.heading, d=d, **kwargs)
+
     
 
 class Robot2(object):
@@ -65,7 +67,5 @@ class Robot2(object):
         self.y += d * np.sin(p + phi1)
         self.heading = wraptopi(p + phi1 + phi2)
 
-    def robot_draw(self, colour='blue', linestyle='-'):
-        robot_draw(ax, self.x, self.y, self.heading,
-                   colour=colour, linestyle=linestyle)
-            
+    def draw(self, ax, d=0.5, **kwargs):
+        robot_draw(ax, self.x, self.y, self.heading, d=d, **kwargs)
