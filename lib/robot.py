@@ -13,7 +13,7 @@ def robot_draw(ax, x, y, theta, d=0.25, **kwargs):
     opt = {'head_width': 0.15, 'head_length': 0.15, 'width': 0.05,
            'length_includes_head': True}
 
-    color = kwargs.pop('color', 'blue')    
+    color = kwargs.pop('color', kwargs.pop('colour', 'blue'))
     circle = Circle((x, y), d, fill=False, color=color, **kwargs)
     ax.add_artist(circle)
     ax.arrow(x, y, dx, dy, **opt, color=color)        
