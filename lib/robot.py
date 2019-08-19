@@ -10,7 +10,7 @@ def robot_draw(ax, x, y, theta, d=0.25, **kwargs):
     dx = d * np.cos(theta)
     dy = d * np.sin(theta)
 
-    opt = {'head_width': 0.15, 'head_length': 0.15, 'width': 0.05,
+    opt = {'head_width': 0.3, 'head_length': 0.3, 'width': 0.05,
            'length_includes_head': True}
 
     color = kwargs.pop('color', kwargs.pop('colour', 'blue'))

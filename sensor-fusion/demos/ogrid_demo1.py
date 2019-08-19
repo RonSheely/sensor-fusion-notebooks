@@ -245,7 +245,7 @@ class Wall(object):
         return hit, rmin, blockhit
             
 wall1 = Wall((-1, 8), (3, 8))
-wall2 = Wall((4, 5), (4, 7))
+wall2 = Wall((4, 6), (4, 7))
 wall3 = Wall((-7, 2), (-7, 7))
 walls = (wall1, wall2, wall3)
 
