@@ -5,6 +5,7 @@ from ipywidgets import interact, interactive, fixed
 from matplotlib.pyplot import subplots
 from .lib.robot import robot_draw, Robot
 from .lib.pose import Pose
+from .lib.line import Line, LineSeg
 
 xmin = -10
 xmax = 10
@@ -20,77 +21,6 @@ x = np.linspace(xmin, xmax, Nx)
 y = np.linspace(ymin, ymax, Ny)
 
 beamwidth = 15
-
-class Line(object):
-
-    def __init__(self, p1, p2):
-        self.p1 = p1
-        self.p2 = p2
-        
-    @property
-    def A(self):
-        return self.p1[1] - self.p2[1]
-    
-    @property
-    def B(self):        
-        return self.p2[0] - self.p1[0]
-    
-    @property
-    def C(self):
-        return self.p2[0] * self.p1[1] - self.p1[0] * self.p2[1]
-    
-    def intersection(self, line):
-        
-        if not isinstance(line, Line):
-            line = Line(*line)
-            
-        D  = self.A * line.B - self.B * line.A
-        Dx = self.C * line.B - self.B * line.C
-        Dy = self.A * line.C - self.C * line.A
-        
-        if D == 0:
-            return False
-        x = Dx / D
-        y = Dy / D
-        return x, y
-
-    def coord(self, t):
-
-        x = self.p1[0] + t * (self.p2[0] - self.p1[0])
-        y = self.p1[1] + t * (self.p2[1] - self.p1[1])
-        return x, y
-
-    
-class LineSeg(Line):
-
-    def intersection(self, lineseg):
-        R = super(LineSeg, self).intersection(lineseg)
-        if not R:
-            return False
-        x, y = R
-
-        tx = (x - self.p1[0]) / (self.p2[0] - self.p1[0] + 1e-20)
-        ty = (y - self.p1[1]) / (self.p2[1] - self.p1[1] + 1e-20)
-        if tx > 1 or tx < 0:
-            return False
-        if ty > 1 or ty < 0:
-            return False
-
-        tx = (x - lineseg.p1[0]) / (lineseg.p2[0] - lineseg.p1[0] + 1e-20)
-        ty = (y - lineseg.p1[1]) / (lineseg.p2[1] - lineseg.p1[1] + 1e-20)
-        if tx > 1 or tx < 0:
-            return False
-        if ty > 1 or ty < 0:
-            return False        
-        
-        return R
-
-    @property
-    def length(self):
-
-        return np.sqrt((self.p2[0] - self.p1[0])**2 +
-                       (self.p2[1] - self.p1[1])**2)
-    
 
 class Scan(object):
 
@@ -182,8 +112,8 @@ class Occfind(object):
             xt = self.pose.x + r * np.cos(angle)
             yt = self.pose.y + r * np.sin(angle)
 
-            xc = int(xt + 0.5)
-            yc = int(yt + 0.5)
+            xc = int(np.round(xt))
+            yc = int(np.round(yt))
             hit = (xc, yc)
 
             if hit not in hits:
@@ -210,8 +140,8 @@ class Occfind(object):
 
             for t1 in t:
                 xt, yt = lineseg.coord(t1)
-                xc = int(xt + 0.5)
-                yc = int(yt + 0.5)
+                xc = int(np.round(xt))
+                yc = int(np.round(yt))                
                 visit = (xc, yc)
 
                 if visit not in visits:
@@ -246,7 +176,8 @@ class Wall(object):
 
 wall1 = Wall((-1, 8), (4, 8))
 wall2 = Wall((4, 8), (4, 6))
-walls = (wall1, wall2)
+wall3 = Wall((-7, 2), (-7, 7))
+walls = (wall1, wall2, wall3)
         
 
 def heatmap(ax, x, y, data, fmt='%.1f', skip=[], **kwargs):
@@ -302,8 +233,8 @@ class Ogrid(object):
         lam = np.log(P1 / P2)
         for cell in cells:
             # Weed out marginal cells.
-            if cells[cell] < 5:
-                continue
+            #if cells[cell] < 5:
+            #    continue
 
             try:
                 m = np.argwhere(self.x == cell[0])[0][0]
