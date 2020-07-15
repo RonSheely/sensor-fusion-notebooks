@@ -36,7 +36,7 @@ def likelihood_demo3_plot(sigmaV=0.2, z=2, show_Lambda=True):
     axes[0].legend()    
     
     axes[1].grid(True)
-    axes[1].plot(x, fZgX, '--', label='$l_{X|Z}(x|%.1f)$' % z)
+    axes[1].plot(x, fZgX, '--', label='$L(x|%.1f)$' % z)
     axes[1].set_xlabel('$x$')
     axes[1].legend()
 

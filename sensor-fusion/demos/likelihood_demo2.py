@@ -38,7 +38,7 @@ def likelihood_demo2_plot(z=2, a=0.3, b=0.1,
     axes[0].set_ylabel('$z$')
     axes[0].legend()    
 
-    axes[1].plot(x, fZgX, '--', label='$l_{X|Z}(x|%.1f)$' % z)
+    axes[1].plot(x, fZgX, '--', label='$L(x|%.1f)$' % z)
     axes[1].set_xlabel('$x$')    
     axes[1].legend()
 
