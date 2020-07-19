@@ -26,7 +26,7 @@ def BLUE_demo4_plot(sigmaZ1=1.0, sigmaZ2=2.0, w1=0.5):
     fZ2 = rect((z - muZ2) / WZ2) / WZ2
     fZ = trap2(z, TZ, WZ) * (2 / (TZ + WZ))
 
-    signal_overplot3(z, fZ1, z, fZ2, z, fZ,  ('Z1', 'Z2', 'Z'), ylim=(0, 0.5))
+    signal_overplot3(z, fZ1, z, fZ2, z, fZ,  ('$f_{Z1}(z)$', '$f_{Z2}(z)$', '$f_{Z}(z)$'), ylim=(0, 0.5))    
 
 def BLUE_demo4():
     interact(BLUE_demo4_plot,

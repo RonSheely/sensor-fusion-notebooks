@@ -21,7 +21,7 @@ def BLUE_demo1_plot(w1=0.5, w2=0.5):
     fZ2 = gauss(z, muZ2, sigmaZ2)    
     fZ = gauss(z, muZ, sigmaZ)
     
-    signal_overplot3(z, fZ1, z, fZ2, z, fZ,  ('Z1', 'Z2', 'Z'), ylim=(0, 0.5))
+    signal_overplot3(z, fZ1, z, fZ2, z, fZ,  ('$f_{Z1}(z)$', '$f_{Z2}(z)$', '$f_{Z}(z)$'), ylim=(0, 0.5))
 
 def BLUE_demo1():
     interact(BLUE_demo1_plot, w1=(0, 1.0, 0.1), w2=(0, 1.0, 0.1))
