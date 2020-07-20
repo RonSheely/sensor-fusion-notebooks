@@ -27,7 +27,7 @@ def BLUE_demo3():
     interact(BLUE_demo3_plot,
              sigmaZ1=(0.5, 4.0, 0.1),
              sigmaZ2=(0.5, 4.0, 0.1),
-             w1=(0, 1.0, 0.1))
+             w1=(0, 1.0, 0.05))
     
     
 
