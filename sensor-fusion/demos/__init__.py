@@ -16,6 +16,7 @@ from .sonar1_fit_stats_demo1 import *
 from .sonar1_fit_model_demo1 import *
 from .ir3_hist_demo1 import *
 from .kf_demo1 import *
+from .kf_demo2 import *
 from .ekf_demo1 import *
 from .linear_transformation_demo1 import *
 from .nonlinear_transformation_demo1 import *
