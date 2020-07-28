@@ -17,7 +17,7 @@ def pdf(x, muX, sigmaX, distribution):
         return 1.0 * ((x >= xmin) & (x <= xmax)) / (xmax - xmin)
     raise ValueError('Unknown distribution %s' % distribution)
 
-def linear_transformation_demo1_plot(muX=0, sigmaX=1, A=1, B=0, distribution=distributions[1]):
+def linear_transformation_demo1_plot(muX=0, sigmaX=1, c=1, d=0, distribution=distributions[1]):
 
     Nx = 801
     x = np.linspace(-10, 10, Nx)
@@ -25,10 +25,10 @@ def linear_transformation_demo1_plot(muX=0, sigmaX=1, A=1, B=0, distribution=dis
     offset = int(-x[0] / dx)
 
     fX = pdf(x, muX, sigmaX, distribution)
-    fZ = pdf(x, A * muX + B, A * sigmaX, distribution)
+    fZ = pdf(x, c * muX + d, c * sigmaX, distribution)
     signal_plot(x, fZ)
 
 def linear_transformation_demo1():
     interact(linear_transformation_demo1_plot, muX=(-2, 2), sigmaX=(0.01, 5, 0.01),
-             A=(0.5, 5, 0.5), B=(-5, 5, 1),
+             c=(0.5, 5, 0.5), d=(-5, 5, 1),
              distribution=distributions)
