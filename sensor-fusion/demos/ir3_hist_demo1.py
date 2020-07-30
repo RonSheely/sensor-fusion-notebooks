@@ -7,6 +7,7 @@ from numpy.linalg import lstsq
 
 
 def model(r, k):
+    # This model is not that good!  
     return k[0] + k[1] / (r + k[2])
 
 def model_nonlinear_least_squares_fit(r, v, iterations=5):
@@ -57,19 +58,25 @@ def ir3_hist_demo1_plot(distance=1.0, width=0.5):
     smean = error[m].mean()
     sstd = error[m].std()
 
-    axes, kwargs = create_axes(2)
+    axes, kwargs = create_axes(3)
     axes[0].plot(distance1, data, '.', alpha=0.2)
     axes[0].plot(distance1, data_fit)    
     axes[0].set_xlabel('Distance (m)')
     axes[0].set_ylabel('Measurement')
     axes[0].set_ylim(0, 4)
-    axes[0].axvspan(dmin, dmax, color='orange', alpha=0.4)
+    axes[0].axvspan(dmin, dmax, color='C1', alpha=0.4)
     axes[0].set_title('mean = %.2f  std = %.2f' % (smean, sstd))
 
-    axes[1].hist(error[m], bins=bins, color='orange')
-    axes[1].set_xlabel('Measurement')
-    axes[1].set_ylabel('Count')    
-    axes[1].set_xlim(zmin, zmax)    
+    axes[1].plot(distance1, data - data_fit, '.', alpha=0.2)
+    axes[1].set_xlabel('Distance (m)')
+    axes[1].set_ylabel('Error')
+    axes[1].set_ylim(-0.5, 0.5)
+    axes[1].axvspan(dmin, dmax, color='C1', alpha=0.4)
+    
+    axes[2].hist(error[m], bins=bins, color='C2')
+    axes[2].set_xlabel('Measurement')
+    axes[2].set_ylabel('Count')    
+    axes[2].set_xlim(zmin, zmax)    
 
 def ir3_hist_demo1():
     interact(ir3_hist_demo1_plot, distance=(0, 3.5, 0.2),
