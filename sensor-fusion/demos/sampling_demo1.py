@@ -2,6 +2,7 @@
 import numpy as np
 from matplotlib.pyplot import show
 from scipy.interpolate import interp1d
+from scipy.integrate import cumtrapz
 from ipywidgets import interact, interactive, fixed, interact
 from .lib.signal_plot import hist_plot
 from .lib.utils import rect, sinc, gauss
@@ -26,7 +27,7 @@ def sampling_demo1_plot(distX=distributions[0], muX=0, sigmaX=1, N=1000):
     dx = x[1] - x[0]    
     
     fX = pdf(x, muX, sigmaX, distX)    
-    FX = np.cumsum(fX) * dx
+    FX = cumtrapz(fX, x, initial=0)
     
     interp = interp1d(FX, x, kind='linear', bounds_error=False,
                       fill_value=x[-1])
