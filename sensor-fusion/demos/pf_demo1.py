@@ -31,8 +31,8 @@ def sample(x, fX, M):
 
 
 def pf_demo1_plot(distX0='gaussian', sigmaX0=0.1, sigmaV=0.1,
-                  sigmaW=0.05, seed=1, M=5, z=1, resample=False, KDE=False,
-                  annotate=True):
+                  sigmaW=0.05, seed=1, num_particles=5, z=1,
+                  resample=False, KDE=False, annotate=True):
 
     np.random.seed(seed)
 
@@ -52,8 +52,8 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.1, sigmaV=0.1,
     
     fX = pdf(x, 0, sigmaX0, distX0)
 
-    px_initial = sample(x, fX, M)
-    weights_initial = np.ones(M)
+    px_initial = sample(x, fX, num_particles)
+    weights_initial = np.ones(num_particles)
 
     for m in range(1, step + 1):
 
@@ -61,7 +61,7 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.1, sigmaV=0.1,
             px_initial = px_posterior
             weights_initial = weights_posterior            
         
-        px_prior = px_initial + B * v + np.random.randn(M) * sigmaW
+        px_prior = px_initial + B * v + np.random.randn(num_particles) * sigmaW
         weights_prior = weights_initial
         
         #z = C * m * dt * v + np.random.randn(1) * sigmaV
@@ -72,8 +72,8 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.1, sigmaV=0.1,
 
         if resample:
             fXpostest = KDE1(px_posterior, weights_posterior).estimate(x)
-            px_posterior = sample(x, fXpostest, M)
-            weights_posterior = np.ones(M)            
+            px_posterior = sample(x, fXpostest, num_particles)
+            weights_posterior = np.ones(num_particles)            
             
 
     fig = figure(figsize=(10, 5))
@@ -84,7 +84,7 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.1, sigmaV=0.1,
     alpha = 0.5
     ax.bar(px_initial, weights_initial, width=width, linewidth=0, alpha=alpha, label='$X_{%d}$ initial' % (m - 1))
 
-    idx = np.argsort(px_initial[0: min(M, annotate_max)])
+    idx = np.argsort(px_initial[0: min(num_particles, annotate_max)])
     
     if annotate:
         for q, p in enumerate(idx):
@@ -118,7 +118,7 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.1, sigmaV=0.1,
     ax.legend()
 
 def pf_demo1():
-    interact(pf_demo1_plot, step=(1, 5), M=(5, 100, 5),
+    interact(pf_demo1_plot, step=(1, 5), num_particles=(5, 100, 5),
              z=(0.7, 1.3, 0.05),
              v=(1.0, 4.0, 0.2),
              distX0=distributions,
