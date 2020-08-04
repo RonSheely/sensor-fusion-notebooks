@@ -68,6 +68,7 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.1, sigmaV=0.1,
 
         px_posterior = px_prior
         weights_posterior = weights_prior * gauss(px_posterior, z, sigmaV)
+        weights_posterior1 = weights_posterior
 
         if resample:
             fXpostest = KDE1(px_posterior, weights_posterior).estimate(x)
@@ -96,7 +97,7 @@ def pf_demo1_plot(distX0='gaussian', sigmaX0=0.1, sigmaV=0.1,
 
     ax.bar(px_posterior, weights_posterior, width=width, linewidth=0, alpha=alpha, label='$X_{%d}^{+}$ posterior' % m)
 
-    max_weight = max(max(weights_initial), max(weights_prior), max(weights_posterior))
+    max_weight = max(max(weights_initial), max(weights_prior), max(weights_posterior1))
     
     ax.set_xlim(-1, 2)
     ax.set_ylim(0, max_weight + 0.1)
