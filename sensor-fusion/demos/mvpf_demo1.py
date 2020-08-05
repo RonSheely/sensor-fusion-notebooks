@@ -23,7 +23,8 @@ class Beacon(object):
         self.theta = theta
         self.num = num
 
-    def plot(self, axes, colour='blue', label=None, size=1):
+    def plot(self, axes, marker='o', colour='blue', label=None, size=1,
+             name=None):
 
         x, y, theta = self.x, self.y, self.theta
 
@@ -32,27 +33,30 @@ class Beacon(object):
         ydx = size * np.cos(theta + np.pi/2)
         ydy = size * np.sin(theta + np.pi/2)
         
-        axes.plot(x, y, 'o', color=colour, label=label)
+        axes.plot(x, y, marker, color=colour, label=label, markersize=10)
         
-        axes.plot((x, x + xdx), (y, y + xdy), color='red')
-        axes.plot((x, x + ydx), (y, y + ydy), color='green')
+        axes.plot((x, x + xdx), (y, y + xdy), color='red', linewidth=3)    
+        axes.plot((x, x + ydx), (y, y + ydy), color='green', linewidth=3)
+        if name is not None:
+            axes.text(x + 0.5, y - 0.5, name)
 
-        #axes.text(x, y, '%d' % self.num)
 
-
-def mvpf_demo1_plot(robot_x=3, robot_y=1, robot_theta=0,
-                    beacon_x=15, beacon_y=8, beacon_theta=-165):
+def mvpf_demo1_plot(beacon_x=15, beacon_y=8, beacon_theta=-75,
+                    robot_x=3, robot_y=1, robot_theta=15):
+                    
 
     robot = Beacon(robot_x, robot_y, np.radians(robot_theta), 1)    
     beacon = Beacon(beacon_x, beacon_y, np.radians(beacon_theta), 1)
 
     fig, ax = subplots(1, figsize=(10, 5))
     ax.grid(True)
-    ax.set_xlim(0, 20)
-    ax.set_ylim(0, 10)    
+    ax.axis('scaled')
+    ax.set_xlim(-0.05, 20)
+    ax.set_ylim(-0.05, 10)
+    ax.set_xticks((0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20))
 
-    robot.plot(ax, colour='black', size=5)    
-    beacon.plot(ax)
+    robot.plot(ax, marker='p', colour='black', size=5, name='robot')    
+    beacon.plot(ax, name='beacon')    
 
     r = np.sqrt((robot.x - beacon.x)**2 + (robot.y - beacon.y)**2)
     phi = np.arctan2((beacon.y - robot.y), (beacon.x - robot.x))
@@ -65,6 +69,9 @@ def mvpf_demo1_plot(robot_x=3, robot_y=1, robot_theta=0,
               theta1=np.degrees(robot.theta),
               theta2=np.degrees(phi))
     ax.add_patch(arc)
+
+    ax.plot((0, 20), (0, 0), color='red', linewidth=3)    
+    ax.plot((0, 0), (0, 10), color='green', linewidth=3)    
     
     ax.set_title('r=%.1f, phi=%.1f' % (r, np.degrees(phid)))
     
