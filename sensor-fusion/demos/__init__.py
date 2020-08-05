@@ -38,3 +38,4 @@ from .hf_demo1 import *
 from .dwa_demo1 import *
 from .dwa_demo2 import *
 from .ogrid_demo1 import *
+from .mvpf_demo1 import *
