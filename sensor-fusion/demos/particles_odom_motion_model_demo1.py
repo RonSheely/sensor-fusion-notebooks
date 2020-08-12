@@ -60,13 +60,13 @@ def particles_odom_motion_model_demo1_plot(Xmin=-1, Xmax=1, Ymin=0, Ymax=1,
     phi1 = np.linspace(-20, 20, 100)
     ax3.plot(phi1, gauss(phi1, muPhi1, sigmaPhi1 + 1e-12))
     ax3.set_xlabel('$\phi_1$')
-    ax3.set_ylabel('$f_{\Phi_1}(\phi)$')        
+    ax3.set_ylabel('$f_{\Phi_1}(\phi_1)$')        
     ax3.set_yticks([])
 
     phi2 = np.linspace(-20, 20, 100)
     ax4.plot(phi2, gauss(phi2, muPhi2, sigmaPhi2 + 1e-12))
     ax4.set_xlabel('$\phi_2$')
-    ax4.set_ylabel('$f_{\Phi_2}(\phi)$')        
+    ax4.set_ylabel('$f_{\Phi_2}(\phi_2)$')        
     ax4.set_yticks([])    
             
 

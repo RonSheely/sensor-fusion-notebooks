@@ -1,7 +1,8 @@
 # Michael P. Hayes UCECE, Copyright 2018--2019
 import numpy as np
+from matplotlib.gridspec import GridSpec
 from ipywidgets import interact, interactive, fixed
-from matplotlib.pyplot import subplots
+from matplotlib.pyplot import figure
 from matplotlib.patches import Arc
 from .lib.utils import gauss, wraptopi, angle_difference
 
@@ -41,16 +42,21 @@ def mvpf_demo2_plot(beacon_x=15, beacon_y=8, beacon_theta=-75,
     particle = Beacon(particle_x, particle_y, np.radians(particle_theta), 1)        
     beacon = Beacon(beacon_x, beacon_y, np.radians(beacon_theta), 1)
 
-    fig, ax = subplots(1, figsize=(10, 5))
-    ax.grid(True)
-    ax.axis('scaled')
-    ax.set_xlim(-0.05, 20)
-    ax.set_ylim(-0.05, 10)
-    ax.set_xticks((0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20))
+    fig = figure(figsize=(12, 5))                
+    gs = GridSpec(5, 4)
+    ax1 = fig.add_subplot(gs[0:5,0:3])
+    ax2 = fig.add_subplot(gs[0:2, 3])
+    ax3 = fig.add_subplot(gs[3:5, 3])    
+    
+    ax1.grid(True)
+    ax1.axis('scaled')
+    ax1.set_xlim(-0.05, 20)
+    ax1.set_ylim(-0.05, 10)
+    ax1.set_xticks((0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20))
 
-    robot.plot(ax, marker='p', colour='black', size=5, name='robot')
-    particle.plot(ax, marker='p', colour='black', size=5, name='particle')
-    beacon.plot(ax, name='beacon')    
+    robot.plot(ax1, marker='p', colour='black', size=5, name='robot')
+    particle.plot(ax1, marker='p', colour='black', size=5, name='particle')
+    beacon.plot(ax1, name='beacon')    
 
     r = np.sqrt((robot.x - beacon.x)**2 + (robot.y - beacon.y)**2)
     phi = np.arctan2((beacon.y - robot.y), (beacon.x - robot.x))
@@ -60,27 +66,44 @@ def mvpf_demo2_plot(beacon_x=15, beacon_y=8, beacon_theta=-75,
     phip = np.arctan2((beacon.y - particle.y), (beacon.x - particle.x))    
     phipd = wraptopi(phip - particle.theta)
 
-    ax.plot([robot.x, beacon.x], [robot.y, beacon.y], '--k')
-    ax.plot([particle.x, beacon.x], [particle.y, beacon.y], '-.k')    
+    ax1.plot([robot.x, beacon.x], [robot.y, beacon.y], '--k')
+    ax1.plot([particle.x, beacon.x], [particle.y, beacon.y], '-.k')    
     
     arc = Arc((robot.x, robot.y), 5, 5,
               theta1=np.degrees(robot.theta),
               theta2=np.degrees(phi))
-    ax.add_patch(arc)
+    ax1.add_patch(arc)
 
     arc = Arc((particle.x, particle.y), 5, 5,
               theta1=np.degrees(particle.theta),
               theta2=np.degrees(phip))
-    ax.add_patch(arc)    
+    ax1.add_patch(arc)    
 
-    ax.plot((0, 20), (0, 0), color='red', linewidth=3)    
-    ax.plot((0, 0), (0, 10), color='green', linewidth=3)    
+    ax1.plot((0, 20), (0, 0), color='red', linewidth=3)    
+    ax1.plot((0, 0), (0, 10), color='green', linewidth=3)    
 
+    sigmaDR = 0.5
+    sigmaDP = 0.5
+    
     dr = r - rp
     dphi = wraptopi(phid - phipd)
-    a = gauss(dphi / 0.5) * gauss(dr / 0.5)
-    
-    ax.set_title('$\Delta r=%.1f, \Delta \phi=%.1f, a=%.3e$' % (dr, np.degrees(dphi), a))
+    a = gauss(dphi / sigmaDP) * gauss(dr / sigmaDR)
+
+    vdr = np.linspace(-10, 10, 100)
+    ax2.plot(vdr, gauss(vdr, 0, sigmaDR))
+    ax2.plot(dr,  gauss(dr, 0, sigmaDR), 'o')
+    ax2.set_xlabel('$\Delta r$')
+    ax2.set_ylabel('$f_{\Delta R}(\Delta r)$')    
+    ax2.set_yticks([])
+
+    vdp = np.linspace(-np.pi, np.pi, 100)
+    ax3.plot(np.degrees(vdp), gauss(vdp, 0, sigmaDP))
+    ax3.plot(np.degrees(dphi),  gauss(dphi, 0, sigmaDP), 'o')    
+    ax3.set_xlabel('$\Delta \phi$')
+    ax3.set_ylabel('$f_{\Delta \Phi}(\Delta \phi)$')    
+    ax3.set_yticks([])                 
+
+    ax1.set_title('$\Delta r=%.1f, \Delta \phi=%.1f, a=%.3e$' % (dr, np.degrees(dphi), a))
     
 
 def mvpf_demo2():
