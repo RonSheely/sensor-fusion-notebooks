@@ -71,9 +71,8 @@ def motion_decompose_demo1_plot(x0=0, y0=0, theta0=0, v=2, omega=0):
     robot_draw(ax, pose0[0], pose0[1], pose0[2], colour='blue')
     robot_draw(ax, pose1[0], pose1[1], pose1[2], colour='orange')    
     
-    if True:
-        print('phi1 = %.1f deg, d = %.1f m, phi2 = %.1f deg' %
-              (np.degrees(phi1), d, np.degrees(phi2)))
+    ax.set_title('$\phi_1 = %.1f$ deg, $d = %.1f$ m, $\phi_2 = %.1f$ deg' %
+                 (np.degrees(phi1), d, np.degrees(phi2)))
     
 
 def motion_decompose_demo1():

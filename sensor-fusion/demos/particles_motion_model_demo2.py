@@ -8,19 +8,19 @@ from .lib.robot import robot_draw, Robot
 from .lib.pose import Pose
 
 def particles_motion_model_demo2_plot(Xmin=-1, Xmax=1, Ymin=0, Ymax=1,
-                                      Tmin=90, Tmax=90, Nparticles=10,
+                                      ThetaMin=90, ThetaMax=90, Nparticles=10,
                                       v=1, omega=0, steps=0, sigmaV=0,
                                       sigmaOmega=0):
 
-    Tmin = np.radians(Tmin)
-    Tmax = np.radians(Tmax)    
+    ThetaMin = np.radians(ThetaMin)
+    ThetaMax = np.radians(ThetaMax)    
 
     seed(1)
     
     robots = []
     for m in range(Nparticles):
         robot = Robot(uniform(Xmin, Xmax), uniform(Ymin, Ymax),
-                      uniform(Tmin, Tmax))
+                      uniform(ThetaMin, ThetaMax))
         robots.append(robot)
 
 
@@ -47,7 +47,7 @@ def particles_motion_model_demo2():
              v=(0, 2, 0.1), omega=(-2, 2, 0.1),
              Xmin=(-1, 1, 0.1), Xmax=(-1, 1, 0.1),
              Ymin=(-1, 1, 0.1), Ymax=(-1, 1, 0.1),
-             Tmin=(-180, 180, 15), Tmax=(-180, 180, 15),
+             ThetaMin=(-180, 180, 15), ThetaMax=(-180, 180, 15),
              Nparticles=(10, 100, 10),
              sigmaV=(0, 1, 0.1), sigmaOmega=(0, 1, 0.05),
              steps=(0, 5),
