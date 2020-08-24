@@ -19,6 +19,7 @@ def linearise_demo1_plot(x0=1):
 
     fig = signal_plot(x, h)
     ax = fig.axes[0]
+    ax.set_xlabel('$x$')    
     ax.plot(x, h2)
     ax.set_ylim(0, k1)
     
