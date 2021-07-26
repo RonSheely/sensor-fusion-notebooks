@@ -23,6 +23,7 @@ def BLUE_demo1_plot(w1=0.5, w2=0.5):
     
     fig = signal_overplot3(x, fX1, x, fX2, x, fX,  ('$f_{\hat{X}_1}(x)$', '$f_{\hat{X}_2}(x)$', '$f_{\hat{X}}(x)$'), ylim=(0, 0.5))
     fig.axes[0].set_xlabel('$x$')
+    fig.axes[0].grid(True)        
 
 
 def BLUE_demo1():
