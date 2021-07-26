@@ -33,7 +33,13 @@ def rv_sum_demo3_plot(muX=0, rangeX=2, muY=0, rangeY=2):
     mx = (x < 5) & (x > -5)        
     
     fig = signal_plot3(x[mx], fX[mx], x[mx], fY[mx], z[mz], fZ[mz], ylim=(0, 0.55))
-    fig.axes[0].set_xlabel('')
+    fig.axes[0].set_xlabel('')        
+    fig.axes[1].set_xlabel('')    
+    fig.axes[2].set_xlabel('x')
+
+    fig.axes[0].set_ylabel('$f_X(x)$')        
+    fig.axes[1].set_ylabel('$f_Y(x)$')    
+    fig.axes[2].set_ylabel('$f_{X+Y}(x)$')    
     
 
 def rv_sum_demo3():

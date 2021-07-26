@@ -41,6 +41,9 @@ def rv_average_demo1_plot(muX=0, sigmaX=1, N=1, distribution=distributions[1],
     if show_gaussian:
         fig.axes[0].plot(x[mx], fG[mx], '--')
 
+    fig.axes[0].set_xlabel('$x$')
+    fig.axes[0].set_ylabel('$f_Z(x)$')                    
+
 def rv_average_demo1():
     interact(rv_average_demo1_plot, muX=(-2, 2), sigmaX=(0.01, 5, 0.01),
              distribution=distributions, N=(1, 100))
