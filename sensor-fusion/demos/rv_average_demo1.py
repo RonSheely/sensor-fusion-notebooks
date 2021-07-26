@@ -19,7 +19,8 @@ def pdf(x, muX, sigmaX, distribution):
         return u        
     raise ValueError('Unknown distribution %s' % distribution)
 
-def rv_average_demo1_plot(muX=0, sigmaX=1, N=5, distribution=distributions[1]):
+def rv_average_demo1_plot(muX=0, sigmaX=1, N=1, distribution=distributions[1],
+                          show_gaussian=False):
 
     Nx = 201
     x = np.linspace(-5, 5, Nx)
@@ -37,7 +38,8 @@ def rv_average_demo1_plot(muX=0, sigmaX=1, N=5, distribution=distributions[1]):
     mx = (x < 5) & (x > -5)
         
     fig = signal_plot(x[mx], fZ[mx])
-    fig.axes[0].plot(x[mx], fG[mx], '--')
+    if show_gaussian:
+        fig.axes[0].plot(x[mx], fG[mx], '--')
 
 def rv_average_demo1():
     interact(rv_average_demo1_plot, muX=(-2, 2), sigmaX=(0.01, 5, 0.01),
