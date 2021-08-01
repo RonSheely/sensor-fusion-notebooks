@@ -37,15 +37,22 @@ def bayes_demo3_plot(show_model=True, muX=2, sigmaX=0.5, sigmaV=0.2, z=1,
     eta = np.trapz(fXgZ, x)
     fXgZ /= eta
 
+    m1 = x < d
+    m2 = x >= d
+    
+    x1 = np.interp(z, h[m1], x[m1])
+    # Can only interpolate a monotonic function, so
+    # invert values to achieve a monotonic function.
+    x2 = np.interp(1 / z, 1 / h[m2], x[m2])
+    
     if show_model:
         fig, axes = subplots(2, figsize=(10, 5))
         ax1, ax2 = axes
 
-        mx = np.argwhere(abs(h - z) < 0.02)
-        print(mx)
-        mx = mx[0, :]
-        ax1.plot(x[mx], z, 'o')        
-        ax1.plot(x, h, color='black')
+        axes[0].plot(x, h, color='orange', label='$h(x)$')
+        axes[0].plot(x1, z, 'o', color='orange')
+        axes[0].plot(x2, z, 'o', color='orange')
+        axes[0].set_ylabel('$z$')
         
     else:
         fig, ax2 = subplots(1, figsize=(10, 5))

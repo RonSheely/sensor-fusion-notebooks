@@ -7,8 +7,8 @@ from .lib.utils import gauss
 steps = 10
 show_choices = ['Estimates', 'PDFs', 'Estimates and PDFs']
 
-def kf_demo2_plot(show=show_choices[-1], v=2.0, sigmaX0=0.1, sigmaV=1,
-                  sigmaW=0.4, seed=1, step=1):
+def kf_demo3_plot(show=show_choices[-1], v=2.0, sigmaX0=0.1, sigmaV=1.2,
+                  sigmaW=0.8, seed=3, step=1):
 
     np.random.seed(seed)
 
@@ -39,13 +39,12 @@ def kf_demo2_plot(show=show_choices[-1], v=2.0, sigmaX0=0.1, sigmaV=1,
         
     if estax is not None:        
             estax.set_xlim(0, steps)
-            estax.set_ylim(0, steps * B * v)    
+            estax.set_ylim(-2, 2)    
             estax.grid(True)    
-            estax.plot(np.nan, np.nan, '-o', color='C0', label='actual')
             estax.plot(np.nan, np.nan, 'x', color='C1', label='dead reckoning')
             estax.plot(np.nan, np.nan, '+', color='C2', label='likelihood')
-            estax.plot(0, Xinitialmean, '*', color='C3', label='posterior')
-            estax.set_ylabel('Estimate')            
+            estax.plot(np.nan, np.nan, '*', color='C3', label='posterior')
+            estax.set_ylabel('Estimated error')
             estax.legend()
 
     mx = (x < round(steps * B * v)) & (x > -2)
@@ -74,10 +73,9 @@ def kf_demo2_plot(show=show_choices[-1], v=2.0, sigmaX0=0.1, sigmaV=1,
         Xpostvar = (Xpriorvar * Xinfervar) / (Xpriorvar + Xinfervar)
 
         if estax is not None:
-            estax.plot(m, xrobot, 'o', color='C0')
-            estax.plot(m, Xdeadreckonmean, 'x', color='C1')                
-            estax.plot(m, Xinfermean, '+', color='C2')
-            estax.plot(m, Xpostmean, '*', color='C3')
+            estax.plot(m, Xdeadreckonmean - xrobot, 'x', color='C1')
+            estax.plot(m, Xinfermean - xrobot, '+', color='C2')
+            estax.plot(m, Xpostmean -xrobot, '*', color='C3')
 
     fXinitial = gauss(x, Xinitialmean, np.sqrt(Xinitialvar))
     fXprior = gauss(x, Xpriormean, np.sqrt(Xpriorvar))
@@ -98,8 +96,8 @@ def kf_demo2_plot(show=show_choices[-1], v=2.0, sigmaX0=0.1, sigmaV=1,
         pdfax.set_title('z=%.2f, K=%.2f' % (z, K))        
         
 
-def kf_demo2():
-    interact(kf_demo2_plot, show=show_choices,
+def kf_demo3():
+    interact(kf_demo3_plot, show=show_choices,
              step=(1, steps), v=(1.0, 4.0, 0.2),
              sigmaX0=(0.1, 2, 0.1),
              sigmaV=(0.1, 2, 0.1),
