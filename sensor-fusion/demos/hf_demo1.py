@@ -19,7 +19,7 @@ def pdf(x, muX, sigmaX, distribution):
 
 
 def hf_demo1_plot(distX0='gaussian', sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
-                  seed=1, M=100):
+                  seed=1, M=50):
 
     np.random.seed(seed)
 
@@ -32,6 +32,10 @@ def hf_demo1_plot(distX0='gaussian', sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
     C = 1
     D = 0
 
+    # Tweak number of bins so that user has expected number of
+    # bins spanning the plotted range for x.
+    M = int(M * (4 - -2) / (3 - -1))
+    
     Nx = 1000
     x = np.linspace(-10, 40, Nx)
     hx = np.linspace(-2, 4, M)
