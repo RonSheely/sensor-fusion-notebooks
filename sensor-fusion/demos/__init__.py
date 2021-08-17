@@ -42,6 +42,7 @@ from .dwa_demo2 import *
 from .ogrid_demo1 import *
 from .mvpf_demo1 import *
 from .mvpf_demo2 import *
+from .mvpf_demo3 import *
 from .rv_sum_demo1 import *
 from .rv_sum_demo2 import *
 from .rv_sum_demo3 import *

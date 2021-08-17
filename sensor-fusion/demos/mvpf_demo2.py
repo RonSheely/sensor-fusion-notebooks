@@ -37,7 +37,9 @@ def mvpf_demo2_plot(beacon_x=15, beacon_y=8, beacon_theta=-75,
                     robot_x=3, robot_y=1, robot_theta=15,
                     particle_x=10, particle_y=3, particle_theta=15):
                     
-
+    sigmaDR = 0.5
+    sigmaDP = 0.5
+    
     robot = Beacon(robot_x, robot_y, np.radians(robot_theta), 1)
     particle = Beacon(particle_x, particle_y, np.radians(particle_theta), 1)        
     beacon = Beacon(beacon_x, beacon_y, np.radians(beacon_theta), 1)
@@ -59,34 +61,31 @@ def mvpf_demo2_plot(beacon_x=15, beacon_y=8, beacon_theta=-75,
     beacon.plot(ax1, name='beacon')    
 
     r = np.sqrt((robot.x - beacon.x)**2 + (robot.y - beacon.y)**2)
-    phi = np.arctan2((beacon.y - robot.y), (beacon.x - robot.x))
-    phid = wraptopi(phi - robot.theta)    
+    psi = np.arctan2((beacon.y - robot.y), (beacon.x - robot.x))
+    phi = wraptopi(psi - robot.theta)    
 
     rp = np.sqrt((particle.x - beacon.x)**2 + (particle.y - beacon.y)**2)
-    phip = np.arctan2((beacon.y - particle.y), (beacon.x - particle.x))    
-    phipd = wraptopi(phip - particle.theta)
+    psip = np.arctan2((beacon.y - particle.y), (beacon.x - particle.x))    
+    phip = wraptopi(psip - particle.theta)
 
     ax1.plot([robot.x, beacon.x], [robot.y, beacon.y], '--k')
     ax1.plot([particle.x, beacon.x], [particle.y, beacon.y], '-.k')    
     
     arc = Arc((robot.x, robot.y), 5, 5,
               theta1=np.degrees(robot.theta),
-              theta2=np.degrees(phi))
+              theta2=np.degrees(psi))
     ax1.add_patch(arc)
 
     arc = Arc((particle.x, particle.y), 5, 5,
               theta1=np.degrees(particle.theta),
-              theta2=np.degrees(phip))
+              theta2=np.degrees(psip))
     ax1.add_patch(arc)    
 
     ax1.plot((0, 20), (0, 0), color='red', linewidth=3)    
     ax1.plot((0, 0), (0, 10), color='green', linewidth=3)    
 
-    sigmaDR = 0.5
-    sigmaDP = 0.5
-    
     dr = r - rp
-    dphi = wraptopi(phid - phipd)
+    dphi = wraptopi(phi - phip)
     a = gauss(dphi / sigmaDP) * gauss(dr / sigmaDR)
 
     vdr = np.linspace(-10, 10, 100)
