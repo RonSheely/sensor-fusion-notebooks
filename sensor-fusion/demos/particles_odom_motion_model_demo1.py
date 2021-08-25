@@ -9,13 +9,15 @@ from .lib.robot import robot_draw, Robot2
 from .lib.pose import Pose
 from .lib.utils import gauss
 
-def particles_odom_motion_model_demo1_plot(Xmin=-1, Xmax=1, Ymin=0, Ymax=1,
-                                           Thetamin=90, ThetaMax=90, Nparticles=10,
-                                           muD=1, sigmaD=0,
-                                           muPhi1=0, sigmaPhi1=0,
-                                           muPhi2=0, sigmaPhi2=0, 
-                                           steps=0):
-
+def particles_odom_motion_model_demo1_plot(Xmin=-1, Xmax=1, Ymin=0,
+                                           Ymax=1, Thetamin=90,
+                                           ThetaMax=90, Nparticles=10,
+                                           dp=1, phi1p=0, phi2p=0,
+                                           sigmaD=0, sigmaPhi1=0,
+                                           sigmaPhi2=0, steps=0):
+    muD = 0
+    muPhi1 = 0
+    muPhi2 = 0
     Thetamin = np.radians(Thetamin)
     ThetaMax = np.radians(ThetaMax)    
 
@@ -45,9 +47,9 @@ def particles_odom_motion_model_demo1_plot(Xmin=-1, Xmax=1, Ymin=0, Ymax=1,
         
         for m, robot in enumerate(robots):
             robot_draw(ax1, robot.x, robot.y, robot.heading, colour=colour)
-            d = muD + np.random.randn() * sigmaD
-            phi1 = muPhi1 + np.random.randn() * sigmaPhi1
-            phi2 = muPhi2 + np.random.randn() * sigmaPhi2            
+            d = dp + np.random.randn() * sigmaD
+            phi1 = phi1p + np.random.randn() * sigmaPhi1
+            phi2 = phi2p + np.random.randn() * sigmaPhi2            
             
             robot.transition(d, np.radians(phi1), np.radians(phi2), dt=1)
 
@@ -76,9 +78,9 @@ def particles_odom_motion_model_demo1():
              Ymin=(-1, 1, 0.1), Ymax=(-1, 1, 0.1),
              Phimin=(-180, 180, 15), PhiMax=(-180, 180, 15),
              Nparticles=(10, 100, 10),
-             muD=(0, 2, 0.1), sigmaD=(0.1, 1, 0.1),
-             muPhi1=(-2, 2, 0.1), sigmaPhi1=(1, 10, 1),
-             muPhi2=(-2, 2, 0.1), sigmaPhi2=(1, 10, 1),             
+             dp=(0, 2, 0.1), sigmaD=(0.1, 1, 0.1),
+             phi1p=(-2, 2, 0.1), sigmaPhi1=(1, 10, 1),
+             phi2p=(-2, 2, 0.1), sigmaPhi2=(1, 10, 1),             
              steps=(0, 5),
              continuous_update=False)
     

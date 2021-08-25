@@ -1,4 +1,4 @@
-# Michael P. Hayes UCECE, Copyright 2018--2019
+# Michael P. Hayes UCECE, Copyright 2018--2021
 import numpy as np
 from matplotlib.pyplot import arrow
 from ipywidgets import interact, interactive, fixed
@@ -26,7 +26,7 @@ def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt):
             weights[n, m] = objective(v, speed_goal,
                                       robot.heading, heading_goal)
 
-def dwa_demo1_plot(dt=0.5, v_max=4, omega_max=360, a_max=2, alpha_max=180, v=1,
+def dwa_demo1_plot(dt=1, v_max=4, omega_max=360, a_max=2, alpha_max=180, v=1,
                    omega=0, heading=90, speed_goal=1, heading_goal=90):
 
     w = omega
@@ -60,8 +60,8 @@ def dwa_demo1_plot(dt=0.5, v_max=4, omega_max=360, a_max=2, alpha_max=180, v=1,
     # Region of all achievable speeds
     ax.plot((w1_min, w1_max, w1_max, w1_min, w1_min), (v1_min, v1_min, v1_max, v1_max, v1_min), '-', color='orange')    
 
-    Nv = 7
-    Nw = 7
+    Nv = 9
+    Nw = 9
 
     weights = np.zeros((Nv, Nw))
     
@@ -80,10 +80,9 @@ def dwa_demo1_plot(dt=0.5, v_max=4, omega_max=360, a_max=2, alpha_max=180, v=1,
     
 
 def dwa_demo1():
-    interact(dwa_demo1_plot, dt=(0.1, 1, 0.1),
+    interact(dwa_demo1_plot, dt=(0.1, 2, 0.1),
              v=(0, 2, 0.1), omega=(-60, 60, 15),
              steps=(0, 10), v_max=(1, 5), omega_max=(90, 360, 15),
              a_max=(0.5, 2, 0.5), alpha_max=(30, 180, 15),
              heading=(0, 180, 15), heading_goal=(0, 180, 15),
              speed_goal=(0, 2, 0.1), continuous_update=False)
-    
