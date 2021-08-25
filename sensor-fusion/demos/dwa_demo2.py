@@ -12,35 +12,31 @@ def braking_distance(v, a_max):
     return 0.5 * v**2 / abs(a_max)
 
 
-def obstacle_distance(x, y, theta, obs, d=0):
-
-    # line x = x_1 + t sin theta, y = y_1 + t cos theta
-    # circle (x - x_0)**2 + (y - y_0)**2 = r**2
-    # solve for t to find distance
+def obstacle_distance(x, y, obs, d=0):
 
     dx = x - obs[0]
     dy = y - obs[1]
+    # Radius of inflated obstacle
     r = obs[2] + d
 
-    b = 2 * (dx * np.cos(theta) + dy * np.sin(theta))
-    c = dx**2 + dy**2 - r**2
+    # Check if inside obstacle
+    Rsq = dx**2 + dy**2
+    R = np.sqrt(Rsq)
+    if R < r:
+        return 0
 
-    d = (b / 2)**2 - c
-    if d < 0:
-        return None
+    return abs(R - r)
     
-    t1 = -b / 2 + np.sqrt(d)
-    t2 = -b / 2 - np.sqrt(d)
-    return min(t1, t2)
             
 def objective(speed, speed_goal, heading, heading_goal):
 
     w1 = np.exp(-abs(speed - speed_goal) / 1.0)
-    w2 = np.exp(-abs(angle_difference(heading, heading_goal)) / np.radians(30))
+    w2 = np.exp(-abs(angle_difference(heading, heading_goal)) / np.radians(60))
     return w1 * w2
             
 def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt,
                    obstacles, x, y, d, a_max):
+    """d is the diameter of the robot"""
 
     ww = np.radians(ww)
     heading = np.radians(heading)
@@ -55,9 +51,8 @@ def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt,
 
             d_obs_min = 1e6
             for obs in obstacles:
-                d_obs = obstacle_distance(robot.x, robot.y, robot.heading,
-                                          obs, d)
-                if d_obs is not None and d_obs < d_obs_min:
+                d_obs = obstacle_distance(robot.x, robot.y, obs, d)
+                if d_obs < d_obs_min:
                     d_obs_min = d_obs
 
             clearance = d_obs_min - d_brake
@@ -75,7 +70,7 @@ def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
                    heading_goal=90, obstacles=False, inflate=False,
                    show_best=False):
 
-    dt = 0.5
+    dt = 1
     steps = 1
     
     # Robot diameter
@@ -126,10 +121,8 @@ def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
     vax.set_xlabel('$\omega$')
     vax.set_ylabel('$v$')        
 
-    #Nv = 9
-    #Nw = 9
-    Nv = 7
-    Nw = 7
+    Nv = 9
+    Nw = 9
 
     weights = np.zeros((Nv, Nw))
     
