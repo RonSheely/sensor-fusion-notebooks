@@ -33,7 +33,8 @@ def objective(speed, speed_goal, heading, heading_goal):
     w1 = np.exp(-abs(speed - speed_goal) / 1.0)
     w2 = np.exp(-abs(angle_difference(heading, heading_goal)) / np.radians(60))
     return w1 * w2
-            
+
+
 def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt,
                    obstacles, x, y, d, a_max):
     """d is the diameter of the robot"""
@@ -162,7 +163,7 @@ def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
             circle = Circle((obs[0], obs[1]), obs[2] + d, color=obs[3],
                             fill=True, alpha=0.5)
             xax.add_artist(circle)
-            
+
     xv = np.zeros(steps + 1)
     yv = np.zeros(steps + 1)
     thetav = np.zeros(steps + 1)        
@@ -180,6 +181,8 @@ def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
         thetav[m] = robot.heading        
         robot.transition(v, np.radians(omega), dt=dt)
 
+    # Perhaps should draw path
+        
     robot_draw(xax, xv[0], yv[0], thetav[0], d)        
     for m in range(1, len(xv)):
         robot_draw(xax, xv[m], yv[m], thetav[m], d, linestyle='dashed')
