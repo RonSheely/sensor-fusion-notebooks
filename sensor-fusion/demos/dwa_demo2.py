@@ -31,7 +31,7 @@ def obstacle_distance(x, y, obs, d=0):
 def objective(speed, speed_goal, heading, heading_goal):
 
     w1 = np.exp(-abs(speed - speed_goal) / 1.0)
-    w2 = np.exp(-abs(angle_difference(heading, heading_goal)) / np.radians(60))
+    w2 = np.exp(-abs(angle_difference(heading, heading_goal)) / np.radians(30))
     return w1 * w2
 
 
