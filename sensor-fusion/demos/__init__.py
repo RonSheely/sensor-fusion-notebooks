@@ -2,6 +2,7 @@
 
 from .dead_reckoning_demo1 import *
 from .velocity_motion_model_demo1 import *
+from .velocity_motion_model_demo2 import *
 from .particles_motion_model_demo1 import *
 from .particles_odom_motion_model_demo1 import *
 from .particles_motion_model_demo2 import *
@@ -65,4 +66,3 @@ from .bivariate_gaussian_demo3 import *
 from .linearise_demo1 import *
 from .linearise_demo2 import *
 from .multiple_hypothesis_demo1 import *
-
