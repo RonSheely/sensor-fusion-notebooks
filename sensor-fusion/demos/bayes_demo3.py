@@ -39,32 +39,33 @@ def bayes_demo3_plot(show_model=True, muX=2, sigmaX=0.5, sigmaV=0.2, z=1,
 
     m1 = x < d
     m2 = x >= d
-    
+
     x1 = np.interp(z, h[m1], x[m1])
     # Can only interpolate a monotonic function, so
     # invert values to achieve a monotonic function.
     x2 = np.interp(1 / z, 1 / h[m2], x[m2])
-    
+
     if show_model:
         fig, axes = subplots(2, figsize=(10, 5))
         ax1, ax2 = axes
 
-        axes[0].plot(x, h, color='orange', label='$h(x)$')
-        axes[0].plot(x1, z, 'o', color='orange')
-        axes[0].plot(x2, z, 'o', color='orange')
+        axes[0].plot(x, h, color='C0', label='$h(x)$')
+        axes[0].plot(x1, z, 'o', color='C0')
+        axes[0].plot(x2, z, 'o', color='C0')
+        axes[0].grid(True)
         axes[0].set_ylabel('$z$')
-        
+
     else:
         fig, ax2 = subplots(1, figsize=(10, 5))
-    
+
     ax2.grid(True)
 
     ax2.plot(x, fZgX, '--', label='$L_{X|Z}(x|%d)$ likelihood' % z)
     ax2.plot(x, fX, '-.', label='$f_X(x)$ prior')
-    ax2.plot(x, fXgZ, '-', label='$f_{X|Z}(x|%d)$ posterior' %z)
+    ax2.plot(x, fXgZ, '-', label='$f_{X|Z}(x|%d)$ posterior' % z)
 
     ax2.legend()
-    
+
 
 def bayes_demo3():
     interact(bayes_demo3_plot, muX=(0, 4, 0.2), sigmaX=(0.01, 5, 0.01),

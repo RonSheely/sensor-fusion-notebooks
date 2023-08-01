@@ -39,6 +39,7 @@ from .inverse_transform_sampling_demo1 import *
 from .cdf_demo1 import *
 from .pf_demo1 import *
 from .hf_demo1 import *
+from .hf_demo2 import *
 from .dwa_demo1 import *
 from .dwa_demo2 import *
 from .ogrid_demo1 import *
