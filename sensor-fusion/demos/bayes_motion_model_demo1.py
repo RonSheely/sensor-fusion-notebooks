@@ -5,7 +5,10 @@ from matplotlib.pyplot import subplots
 from .lib.utils import gauss
 
 
-def bayes_motion_model_plot(sigmaW=0.2, deltax=2):
+def bayes_motion_model_plot(sigmaW=0.2, u=2):
+
+    dt = 1
+    dx = u * dt
 
     Nx = 801
     x = np.linspace(0, 5, Nx)
@@ -16,7 +19,7 @@ def bayes_motion_model_plot(sigmaW=0.2, deltax=2):
 
     X, Xp = np.meshgrid(x, xp)
 
-    foo = gauss(X - Xp - deltax, 0, sigmaW)
+    foo = gauss(X - Xp - dx, 0, sigmaW)
 
     axes.imshow(foo.T, origin='lower', extent=(xp[0], xp[-1], x[0], x[-1]))
     axes.axis('tight')
@@ -26,4 +29,4 @@ def bayes_motion_model_plot(sigmaW=0.2, deltax=2):
 
 def bayes_motion_model_demo1():
     interact(bayes_motion_model_plot, sigmaW=(0.01, 0.5, 0.01),
-             deltax=(0, 4, 0.4))
+             u=(0, 4, 0.4))
