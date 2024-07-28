@@ -60,7 +60,7 @@ def bayes_demo3_plot(show_model=True, muX=2, sigmaX=0.5, sigmaV=0.2, z=1,
 
     ax2.grid(True)
 
-    ax2.plot(x, fZgX, '--', label='$L_{X|Z}(x|%d)$ likelihood' % z)
+    ax2.plot(x, fZgX, '--', label='$L(x|%d)$ likelihood' % z)
     ax2.plot(x, fX, '-.', label='$f_X(x)$ prior')
     ax2.plot(x, fXgZ, '-', label='$f_{X|Z}(x|%d)$ posterior' % z)
 

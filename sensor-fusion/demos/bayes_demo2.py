@@ -25,7 +25,7 @@ def bayes_demo2_plot(muX=1, sigmaX=1, z=2, a=0.3,
     x = np.linspace(-5, 5, Nx)
 
     sigmaV = a * abs(x) + 0.1
-    
+
     fX = pdf(x, muX, sigmaX, distX)
     fV = pdf(x, 0, sigmaV, distV)
     fZgX = pdf(x, z, sigmaV, distV)
@@ -38,12 +38,12 @@ def bayes_demo2_plot(muX=1, sigmaX=1, z=2, a=0.3,
     ax = fig.add_subplot(111)
     ax.grid(True)
 
-    ax.plot(x, fZgX, '--', label='$L_{X|Z}(x|%d)$ likelihood' % z)
+    ax.plot(x, fZgX, '--', label='$L(x|%d)$ likelihood' % z)
     ax.plot(x, fX, '-.', label='$f_X(x)$ prior')
     ax.plot(x, fXgZ, '-', label='$f_{X|Z}(x|%d)$ posterior' %z)
 
     ax.legend()
-    
+
 
 def bayes_demo2():
     interact(bayes_demo2_plot, muX=(0, 4, 0.2), a=(0.1, 1, 0.1),

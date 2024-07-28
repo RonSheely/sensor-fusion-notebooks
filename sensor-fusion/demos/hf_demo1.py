@@ -13,46 +13,55 @@ def hf_demo1_plot(sigmaX0=0.4, sigmaV=0.1, sigmaW=0.1,
     v = 2
     dt = 1
 
+    def h(x):
+        """Sensor model"""
+        return x
+
+    def g(x, v):
+        """Motion model"""
+        return x + v * dt
+
     # Tweak number of bins so that user has expected number of
     # bins spanning the plotted range for x.
     M = int(M * (4 - -2) / (3 - -1))
 
-    xp = np.linspace(-2, 4, M)
-    dxp = xp[1] - xp[0]
+    x = np.linspace(-2, 4, M)
+    dx = x[1] - x[0]
 
-    fXh_initial = gauss(xp, 0, sigmaX0)
-    fXh_prior = np.zeros(M)
+    fX_initial = gauss(x, 0, sigmaX0)
+    fX_prior = np.zeros(M)
 
     # Simulate measurement
     z = v * dt + np.random.randn(1) * sigmaV
 
-    # Predict step: Convolve initial belief histogram with conditional
+    # Predict step: "Convolve" initial belief histogram with conditional
     # PDF for process model
-    for i in range(len(xp)):
+    for i in range(len(x)):
         total = 0
-        for j in range(len(xp)):
-            total += fXh_initial[j] * \
-                gauss(xp[i] - xp[j] - v * dt, 0, sigmaW)
-        fXh_prior[i] = total * dxp
+        for j in range(len(x)):
+            total += fX_initial[j] * \
+                gauss(x[i] - g(x[j], v), 0, sigmaW)
+        fX_prior[i] = total * dx
 
     # Update step: Apply Bayes' theorem
-    fXh_posterior = fXh_prior * gauss(z - xp, 0, sigmaV)
-    eta = 1 / np.trapz(fXh_posterior, xp)
-    fXh_posterior *= eta
+    fX_posterior = fX_prior * gauss(z - h(x), 0, sigmaV)
+    eta = 1 / np.trapz(fX_posterior, x)
+    fX_posterior *= eta
 
     fig, ax = subplots(figsize=(10, 5))
     ax.grid(True)
 
-    ax.bar(xp, fXh_initial, label='$X_0$ initial',
-           edgecolor='black', width=dxp)
+    ax.bar(x, fX_initial, label='$X_0$ initial',
+           edgecolor='black', width=dx)
 
-    ax.bar(xp, fXh_prior, label='$X_1^{-}$ prior',
-           edgecolor='black', width=dxp)
+    ax.bar(x, fX_prior, label='$X_1^{-}$ prior',
+           edgecolor='black', width=dx)
 
-    ax.bar(xp, fXh_posterior,
-           label='$X_1^{+}$ posterior', edgecolor='black', width=dxp)
+    ax.bar(x, fX_posterior,
+           label='$X_1^{+}$ posterior', edgecolor='black', width=dx)
 
     ax.set_xlim(-1, 3)
+    ax.set_ylim(0, 4)
     ax.set_xlabel('Position')
     ax.set_ylabel('Prob. density')
     ax.legend()

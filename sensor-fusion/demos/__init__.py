@@ -67,3 +67,4 @@ from .bivariate_gaussian_demo3 import *
 from .linearise_demo1 import *
 from .linearise_demo2 import *
 from .multiple_hypothesis_demo1 import *
+from .bayes_motion_model_demo1 import *
