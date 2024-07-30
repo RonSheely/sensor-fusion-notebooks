@@ -10,15 +10,15 @@ def kf_demo1_plot(step=1, v=2.0, sigmaX0=0.1, sigmaV=0.4, sigmaW=0.4,
     np.random.seed(seed)
 
     dt = 1
-    
+
     A = 1
     B = dt
     C = 1
     D = 0
-    
+
     Nx = 801
     x = np.linspace(-10, 40, Nx)
-    
+
     fig = figure(figsize=(10, 5))
     ax = fig.add_subplot(111)
     ax.grid(True)
@@ -27,24 +27,24 @@ def kf_demo1_plot(step=1, v=2.0, sigmaX0=0.1, sigmaV=0.4, sigmaW=0.4,
 
     Xinitialmean = 0
     Xinitialvar = sigmaX0**2
-    
+
     for m in range(1, step + 1):
 
         if m > 1:
             Xinitialmean = Xpostmean
             Xinitialvar = Xpostvar
-        
+
         Xpriormean = A * Xinitialmean + B * v
         Xpriorvar = (A**2) * Xinitialvar + sigmaW**2
-        
+
         # Hack
         z = C * Xpriormean + np.random.randn(1) * sigmaV
-        
+
         Xinfermean = (z - D * v) / C
         Xinfervar = (sigmaV**2) / (C**2)
-        
+
         K = Xpriorvar / (Xpriorvar + Xinfervar)
-        
+
         Xpostmean = K * Xinfermean + (1 - K) * Xpriormean
         Xpostvar = (Xpriorvar * Xinfervar) / (Xpriorvar + Xinfervar)
 
@@ -53,10 +53,10 @@ def kf_demo1_plot(step=1, v=2.0, sigmaX0=0.1, sigmaV=0.4, sigmaW=0.4,
     fXinfer = gauss(x, Xinfermean, np.sqrt(Xinfervar))
     fXpost = gauss(x, Xpostmean, np.sqrt(Xpostvar))
 
-    ax.plot(x[mx], fXinitial[mx], ':', label='$X_{%d}$ initial' % (m - 1))        
-    ax.plot(x[mx], fXprior[mx], '--', label='$X_{%d}^{-}$ prior' % m)
-    ax.plot(x[mx], fXinfer[mx], '-.', label='$X_{%d}^{m}$ likelihood' % m)
-    ax.plot(x[mx], fXpost[mx], label='$X_{%d}^{+}$ posterior' % m)
+    ax.plot(x[mx], fXinitial[mx], ':', label='$f_{X_{%d}}$ initial' % (m - 1))
+    ax.plot(x[mx], fXprior[mx], '--', label='$f_{X_{%d}^{-}}$ prior' % m)
+    ax.plot(x[mx], fXinfer[mx], '-.', label='$L_{%d}$ likelihood' % m)
+    ax.plot(x[mx], fXpost[mx], label='$f_{X_{%d}^{+}}$ posterior' % m)
 
     ax.legend()
     ax.text(z, max(fXpost) + 0.5, 'z=%.2f' % z)

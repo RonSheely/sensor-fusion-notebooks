@@ -43,7 +43,7 @@ def kf_demo4_plot(show=show_choices[-1], v=2.0, sigmaX0=0.1, sigmaV=1,
         Kax.set_ylim(0, 1)
         Kax.grid(True)
         Kax.plot(np.nan, np.nan, '-o', color='C0')
-        Kax.set_ylabel('Weight')
+        Kax.set_ylabel('Kalman gain')
 
     mx = (x < round(steps * B * v)) & (x > -2)
 
@@ -82,11 +82,11 @@ def kf_demo4_plot(show=show_choices[-1], v=2.0, sigmaX0=0.1, sigmaV=1,
 
     if pdfax is not None:
         pdfax.plot(x[mx], fXinitial[mx], ':',
-                   label='$X_{%d}$ initial' % (m - 1))
-        pdfax.plot(x[mx], fXprior[mx], '--', label='$X_{%d}^{-}$ prior' % m)
+                   label='$f_{X_{%d}}$ initial' % (m - 1))
+        pdfax.plot(x[mx], fXprior[mx], '--', label='$f_{X_{%d}^{-}}$ prior' % m)
         pdfax.plot(x[mx], fXinfer[mx], '-.',
-                   label='$X_{%d}^{m}$ likelihood' % m)
-        pdfax.plot(x[mx], fXpost[mx], label='$X_{%d}^{+}$ posterior' % m)
+                   label='$L_{%d}$ likelihood' % m)
+        pdfax.plot(x[mx], fXpost[mx], label='$f_{X_{%d}^{+}}$ posterior' % m)
         pdfax.grid(True)
         pdfax.legend()
 
