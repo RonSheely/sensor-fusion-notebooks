@@ -57,15 +57,14 @@ def motion_decompose_demo2_plot(x0=0, y0=0, theta0=0, v=4, omega=60):
     if omega != 0:
         r = abs(v / omega)
 
-        xc = x0 - r * sin(theta0)
-        yc = y0 + r * cos(theta0) * sign(omega)
+        if omega < 0:
+            theta0 += pi
 
-        # print(degrees(theta0), xc, yc)
+        xc = x0 - r * sin(theta0)
+        yc = y0 + r * cos(theta0)
 
         theta1 = 0
         theta2 = 2 * pi
-
-        # print(degrees(theta1), degrees(theta2))
 
         arc = Arc((xc, yc), 2 * r, 2 * r, 0, degrees(theta2),
                   degrees(theta1), linestyle='dashed', color='blue')
