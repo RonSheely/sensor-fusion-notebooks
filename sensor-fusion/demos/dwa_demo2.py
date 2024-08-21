@@ -1,10 +1,10 @@
 # Michael P. Hayes UCECE, Copyright 2018--2021
-import numpy as np
-from matplotlib.pyplot import arrow, Circle, Arrow
-from ipywidgets import interact, interactive, fixed
-from matplotlib.pyplot import figure, show, savefig, rcParams, subplots
-from matplotlib.ticker import NullFormatter
-from .lib.utils import wraptopi, angle_difference
+from numpy import radians, exp, linspace, zeros, sqrt, nanargmax, unravel_index
+from numpy import NaN
+from matplotlib.pyplot import Circle
+from ipywidgets import interact
+from matplotlib.pyplot import subplots
+from .lib.utils import angle_difference
 from .lib.robot import robot_draw, Robot
 
 
@@ -22,7 +22,7 @@ def obstacle_distance(x, y, obs, d=0):
 
     # Check if inside obstacle
     Rsq = dx**2 + dy**2
-    R = np.sqrt(Rsq)
+    R = sqrt(Rsq)
     if R < r:
         return 0
 
@@ -31,8 +31,8 @@ def obstacle_distance(x, y, obs, d=0):
 
 def objective(speed, speed_goal, heading, heading_goal):
 
-    w1 = np.exp(-abs(speed - speed_goal) / 1.0)
-    w2 = np.exp(-abs(angle_difference(heading, heading_goal)) / np.radians(30))
+    w1 = exp(-abs(speed - speed_goal) / 1.0)
+    w2 = exp(-abs(angle_difference(heading, heading_goal)) / radians(30))
     return w1 * w2
 
 
@@ -40,9 +40,9 @@ def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt,
                    obstacles, x, y, d, a_max):
     """d is the diameter of the robot"""
 
-    ww = np.radians(ww)
-    heading = np.radians(heading)
-    heading_goal = np.radians(heading_goal)
+    ww = radians(ww)
+    heading = radians(heading)
+    heading_goal = radians(heading_goal)
 
     for m, w in enumerate(ww):
         for n, v in enumerate(vv):
@@ -60,13 +60,13 @@ def calc_objective(weights, heading, vv, ww, speed_goal, heading_goal, dt,
             clearance = d_obs_min - d_brake
 
             if clearance < 0:
-                weights[n, m] = np.NaN
+                weights[n, m] = NaN
             else:
                 weights[n, m] = objective(v, speed_goal,
                                           robot.heading, heading_goal)
                 # Should determine clearance to nearest obstacle and
                 # penalise fast speeds close to obstacles.
-                # (1 - np.exp(-clearance / d))
+                # (1 - exp(-clearance / d))
 
 
 def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
@@ -112,27 +112,28 @@ def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
     fig, axes = subplots(1, 2, figsize=(12, 6))
     xax, vax = axes
 
-    vax.set_xlim(w_min - extra_w, w_max + extra_w)
-    vax.set_ylim(v_min - extra_v, v_max + extra_v)
+    vax.set_xlim(v_min - extra_v, v_max + extra_v)
+    vax.set_ylim(w_min - extra_w, w_max + extra_w)
 
     # Region of all possible speeds
-    vax.plot((w_min, w_max, w_max, w_min, w_min),
-             (v_min, v_min, v_max, v_max, v_min), 'b-')
+    vax.plot((v_min, v_min, v_max, v_max, v_min),
+             (w_min, w_max, w_max, w_min, w_min), 'b-')
 
     # Region of all achievable speeds
-    vax.plot((w1_min, w1_max, w1_max, w1_min, w1_min),
-             (v1_min, v1_min, v1_max, v1_max, v1_min), '-', color='orange')
+    vax.plot((v1_min, v1_min, v1_max, v1_max, v1_min),
+             (w1_min, w1_max, w1_max, w1_min, w1_min),
+             '-', color='orange')
 
-    vax.set_xlabel('$\omega$')
-    vax.set_ylabel('$v$')
+    vax.set_xlabel('$v$')
+    vax.set_ylabel('$\omega$')
 
     Nv = 9
     Nw = 9
 
-    weights = np.zeros((Nv, Nw))
+    weights = zeros((Nv, Nw))
 
-    vv = np.linspace(v1_min, v1_max, Nv)
-    ww = np.linspace(w1_min, w1_max, Nw)
+    vv = linspace(v1_min, v1_max, Nv)
+    ww = linspace(w1_min, w1_max, Nw)
 
     dr = 0
     if inflate:
@@ -141,16 +142,13 @@ def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
     calc_objective(weights, heading, vv, ww, speed_goal, heading_goal,
                    dt, obstacles, x, y, dr, a_max)
 
-    max_index = np.nanargmax(weights)
-    v_index, w_index = np.unravel_index(max_index, weights.shape)
+    max_index = nanargmax(weights)
+    v_index, w_index = unravel_index(max_index, weights.shape)
     v_best = vv[v_index]
     w_best = ww[w_index]
 
-    p1 = vax.transLimits.transform((w1_min, v1_min))
-    p2 = vax.transLimits.transform((w1_max, v1_max))
-
-    vax.imshow(weights, origin='lower', interpolation=None, aspect='auto',
-               extent=(w1_min, w1_max, v1_min, v1_max))
+    vax.imshow(weights.T, origin='lower', interpolation=None, aspect='auto',
+               extent=(v1_min, v1_max, w1_min, w1_max))
     vax.grid(True)
     vax.set_title('$v = %.1f, \omega = %.1f$' % (v_best, w_best))
 
@@ -168,11 +166,11 @@ def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
                             fill=True, alpha=0.5)
             xax.add_artist(circle)
 
-    xv = np.zeros(steps + 1)
-    yv = np.zeros(steps + 1)
-    thetav = np.zeros(steps + 1)
+    xv = zeros(steps + 1)
+    yv = zeros(steps + 1)
+    thetav = zeros(steps + 1)
 
-    robot = Robot(x=x, y=y, heading=np.radians(heading))
+    robot = Robot(x=x, y=y, heading=radians(heading))
 
     if show_best:
         v = v_best
@@ -183,7 +181,7 @@ def dwa_demo2_plot(x=0, y=1, heading=90, v=1, omega=0, speed_goal=1,
         xv[m] = robot.x
         yv[m] = robot.y
         thetav[m] = robot.heading
-        robot.transition(v, np.radians(omega), dt=dt)
+        robot.transition(v, radians(omega), dt=dt)
 
     # Perhaps should draw path
 

@@ -72,6 +72,12 @@ def motion_decompose_demo2_plot(x0=0, y0=0, theta0=0, v=4, omega=60):
 
     ax.plot((pose0[0], pose1[0]), (pose0[1], pose1[1]), color='black')
 
+    dx = pose1[0] - pose0[0]
+    dy = pose1[1] - pose0[1]
+    ax.plot((pose1[0], pose1[0] + 0.25 * dx),
+            (pose1[1], pose1[1] + 0.25 * dy),
+            linestyle='dashed', color='black')
+
     ax.axis('equal')
     # ax.set_xlim(-2.5, 2.5)
     # ax.set_ylim(-2.5, 2.5)
